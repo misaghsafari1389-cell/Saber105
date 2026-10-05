@@ -7,9 +7,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="/manifest.json">
-<link rel="icon" href="/icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
 
 <title>سامانه صابر | سامانه جامع مدیریت پایگاه</title>
 <style>
@@ -156,6 +156,8 @@ body.low-end *,body.low-end *:before,body.low-end *:after{animation-duration:.01
 .adday.today{border-color:var(--light);background:var(--primary)}
 .adday.has em{position:absolute;top:2px;left:4px;font-size:10px;font-style:normal;background:var(--warn);color:#000;border-radius:8px;padding:0 5px}
 #bnav,#bback{display:none}
+.topbar{position:relative;z-index:1000}
+.topnav{display:none!important}
 .ad-out,.ad-inst{display:none!important}body.m .ad-out{display:flex!important}body.can-install .ad-inst{display:flex!important}
 #gs{position:relative;flex:0 1 220px;margin:0 10px}
 #gsq{width:100%;height:34px;background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:0 10px;font:inherit;font-size:12px}
@@ -190,6 +192,20 @@ body.m tr{margin-bottom:14px;border:1px solid var(--border);border-radius:10px;p
 body.m td{display:flex;justify-content:space-between;gap:14px;border:0!important;padding:8px 4px}
 body.m td::before{content:attr(data-label);color:var(--muted);font-size:12px}
 body.m .device-opt:hover{transform:none}
+#gs{position:relative;flex:1 1 360px;max-width:560px;margin:0 auto;display:flex;align-items:center}
+#gsq{width:100%;height:40px;border-radius:22px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:0 42px 0 40px;font:inherit;font-size:13px;transition:box-shadow .15s,border-color .15s}
+#gsq:focus{outline:0;border-color:var(--light);box-shadow:0 2px 16px #0007}
+#gsq::-webkit-search-cancel-button{display:none}
+#gs .gi{position:absolute;inset-inline-start:14px;color:var(--muted);pointer-events:none}
+#gsx{position:absolute;inset-inline-end:6px;width:30px;height:30px;border:0;border-radius:50%;background:none;color:var(--muted);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#gsx[hidden]{display:none}
+#gsr{top:46px;border-radius:16px;padding:6px 0}
+#gsr button{align-items:center;justify-content:flex-start;gap:12px;min-height:46px;touch-action:manipulation;border-bottom:0}
+#gsr button:hover,#gsr button:focus,#gsr button.sel{background:var(--primary);outline:0}
+#gsr .av{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+@media(max-width:1180px){.topnav{display:none}}
+body.m #gsr{position:fixed;top:54px;inset-inline:8px;max-height:calc(100vh - 150px)}
+body.m #gsq{padding:0 40px 0 38px}
 </style>
 </head>
 <body data-project="سامانه صابر بسیج" data-project-status="closed-final">
@@ -496,8 +512,8 @@ function jClock(){var d=new Date(),p=adTP(d),t=fa([p.hour,p.minute,p.second].map
  document.querySelectorAll('input[type=date]').forEach(function(i){var s=i.nextElementSibling;if(!s||!s.classList.contains('adj')){s=document.createElement('small');s.className='adj';i.after(s)}var v=i.value?adJD(i.value):'';if(s.textContent!==v)s.textContent=v})}
 
 /* ---- دستگاه ---- */
-function adDetect(){var ua=navigator.userAgent||'';return(/Android|iPhone|iPad|iPod|Mobile/i.test(ua)||(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<900))?'mobile':'desktop'}
-function devLayout(){var t=getDeviceType()||adDetect();document.body.classList.toggle('m',t==='mobile');document.body.dataset.device=t}
+function adDetect(){var ua=navigator.userAgent||'',w=window.innerWidth;return(/Android|iPhone|iPad|iPod|Mobile/i.test(ua)||(matchMedia('(pointer:coarse)').matches&&w<900))?'mobile':'desktop'}
+function devLayout(){var t=getDeviceType()||adDetect(),mob=(t==='mobile'&&window.innerWidth<900)||window.innerWidth<=760;document.body.classList.toggle('m',mob);document.body.dataset.device=mob?'mobile':'desktop';document.body.dataset.saved=t}
 function askDevice(){return new Promise(function(res){if(getDeviceType())return res();window._devRes=res;var o=document.getElementById('deviceSelectOverlay'),t=adDetect();o.classList.remove('hidden');var el=o.querySelector('[data-type='+t+']');if(el)el.click();var h=document.getElementById('devHint');if(h)h.textContent='تشخیص خودکار: '+(t==='mobile'?'اندروید / گوشی':'ویندوز / کامپیوتر')})}
 
 /* ---- ورود و مسیریابی ---- */
@@ -588,21 +604,46 @@ async function adPassSave(force){var v=function(i){return document.getElementByI
  if(n===o)return e('رمز جدید باید با رمز فعلی فرق داشته باشد.');
  if(n!==c)return e('تکرار رمز با رمز جدید یکسان نیست.');
  var h=await sha256(n+'::saber::'+u.id),us=get(K.users,[]);us.forEach(function(x){if(x.id===u.id){x.passwordHash=h;x.mustChange=false;delete x.tempPass}});put(K.users,us);state.users=us;audit('auth.password','تغییر رمز عبور');closeModal();toast('رمز عبور با موفقیت تغییر کرد')}
-function adGS(q){var box=document.getElementById('gsr');q=en(q||'').trim().toLowerCase();if(q.length<2){box.innerHTML='';box.style.display='none';return}
- var G=[['اعضا','members',state.members,function(m){return[m.name,m.father,m.nationalId,m.role]},function(m){return m.name+(m.nationalId?' · '+m.nationalId:'')}],['برنامه‌ها','programs',state.programs,function(x){return[x.title,x.responsible]},function(x){return x.title}],['جلسات','meetings',state.meetings,function(x){return[x.title,x.responsible]},function(x){return x.title}],['گزارش‌ها','reports',state.reports,function(x){return[x.title,x.responsible,x.unit]},function(x){return x.title}]],h='';
- G.forEach(function(g){var hit=(g[2]||[]).filter(function(x){return g[3](x).some(function(f){return en(f||'').toLowerCase().indexOf(q)>-1})}).slice(0,6);if(hit.length)h+='<div class="gh">'+g[0]+'</div>'+hit.map(function(x){return '<button data-t="'+g[1]+'" data-i="'+esc(x.id)+'">'+esc(g[4](x))+'<small>'+(x.date?adJD(x.date):'')+'</small></button>'}).join('')});
- box.innerHTML=h||'<div class="gh">نتیجه‌ای پیدا نشد</div>';box.style.display='block'}
-function adGo(t,i){var b=document.getElementById('gsr');b.style.display='none';document.getElementById('gsq').value='';switchTab(t);if(t==='members'&&i&&window.viewMember)viewMember(i)}
+function adNorm(x){return en(String(x==null?'':x)).replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\u064b-\u065f]/g,' ').replace(/\s+/g,' ').trim().toLowerCase()}
+function adGS(q){var box=document.getElementById('gsr'),x=document.getElementById('gsx'),tk=adNorm(q).split(' ').filter(Boolean);if(x)x.hidden=!tk.length;
+ if(!tk.length){box.innerHTML='';box.style.display='none';return}
+ var hit=(state.members||[]).filter(function(m){var t=adNorm(Object.keys(m).filter(function(k){return k!=='id'&&typeof m[k]!=='object'}).map(function(k){return m[k]}).join(' '));return tk.every(function(w){return t.indexOf(w)>-1})});
+ hit.sort(function(a,b){return(adNorm(b.name).indexOf(tk[0])===0)-(adNorm(a.name).indexOf(tk[0])===0)});
+ box.innerHTML=hit.length?'<div class="gh">'+fa(hit.length)+' نفر · برای دیدن پرونده، روی نام دوبار کلیک کنید</div>'+hit.slice(0,40).map(function(m){return '<button role="option" data-i="'+esc(m.id)+'"><span class="av">'+esc((m.name||'؟').trim().charAt(0))+'</span><span>'+esc(m.name)+'</span></button>'}).join(''):'<div class="gh">فردی پیدا نشد</div>';box.style.display='block'}
+function adProfile(id){var m=(state.members||[]).filter(function(x){return x.id===id})[0];if(!m)return;
+ var L={name:'نام و نام خانوادگی',father:'نام پدر',nationalId:'کد ملی',birthDate:'تاریخ تولد',blood:'گروه خونی',phone:'شماره تماس',role:'سمت',status:'وضعیت',history:'سوابق',courses:'دوره‌ها',notes:'توضیحات'},keys=Object.keys(L).concat(Object.keys(m).filter(function(k){return k!=='id'&&!L[k]&&typeof m[k]!=='object'})),
+ row=function(a,b){return '<div class="adrow"><b>'+esc(a)+'</b><span style="text-align:left;white-space:pre-wrap">'+esc(b==null||b===''?'—':/^(19|20)\d\d-\d\d-\d\d$/.test(b)?adJD(b):b)+'</span></div>'},
+ rec=0,pr=0;(state.attendance||[]).forEach(function(r){var v=(r.statuses||{})[id];if(v){rec++;if(v==='حاضر')pr++}});
+ var cs=(state.courses||[]).filter(function(c){return c.memberId===id}),tk=adT().filter(function(t){return t.who===id}),ev=(state.evaluations||{})[id];
+ var r=document.getElementById('modalRoot');r.classList.remove('hidden');
+ r.innerHTML='<div class="modal-root" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3>پرونده: '+esc(m.name)+'</h3><button class="close" aria-label="بستن" onclick="closeModal()">×</button></div><div class="modal-body"><p class="muted">🔒 فقط مشاهده؛ این پرونده از اینجا قابل ویرایش نیست.</p>'+
+ keys.filter(function(k,i){return keys.indexOf(k)===i}).map(function(k){return row(L[k]||k,m[k])}).join('')+
+ row('حضور در جلسات',rec?fa(Math.round(pr/rec*100))+'٪ ('+fa(pr)+' از '+fa(rec)+')':'ثبت نشده')+
+ row('دوره‌های ثبت‌شده',cs.length?cs.map(function(c){return c.name}).join('، '):'ندارد')+
+ row('وظایف',tk.length?fa(tk.filter(function(t){return t.status===AD_ST[2]}).length)+' انجام‌شده از '+fa(tk.length):'ندارد')+
+ (ev&&typeof ev==='object'?row('ارزیابی عملکرد',Object.keys(ev).map(function(k){return k+': '+fa(ev[k])}).join(' · ')):'')+
+ '</div></div></div>'}
+function adDevModal(){var t=getDeviceType()||adDetect(),r=document.getElementById('modalRoot');r.classList.remove('hidden');
+ r.innerHTML='<div class="modal-root" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3>نوع دستگاه</h3><button class="close" aria-label="بستن" onclick="closeModal()">×</button></div><div class="modal-body"><p class="muted">انتخاب فعلی: '+(t==='mobile'?'اندروید / گوشی':'ویندوز / کامپیوتر')+'. اگر روی گوشی «Desktop site» را روشن کنید و عرض صفحه از ۹۰۰ پیکسل بیشتر شود، چیدمان کامپیوتر خودکار اعمال می‌شود.</p><div class="adlinks"><button class="btn" onclick="adSetDev(\'desktop\')">🖥️ ویندوز / کامپیوتر</button><button class="btn" onclick="adSetDev(\'mobile\')">📱 اندروید / گوشی</button></div></div></div></div>'}
+function adSetDev(t){setDeviceType(t);devLayout();closeModal();toast('نوع دستگاه تغییر کرد')}
 function AddonInit(){try{
- Object.assign(window,{adRCenter:adRCenter,adSetCen:adSetCen,adAddTask:adAddTask,adCycle:adCycle,adDelTask:adDelTask,adNav:adNav,adPick:adPick,adAddEv:adAddEv,adDelEv:adDelEv,adRBackup:adRBackup,adMore:adMore,adPassModal:adPassModal,adPassSave:adPassSave,adGS:adGS,adGo:adGo,adInstall:adInstall,installSaberApp:installSaberApp});
+ Object.assign(window,{adRCenter:adRCenter,adSetCen:adSetCen,adAddTask:adAddTask,adCycle:adCycle,adDelTask:adDelTask,adNav:adNav,adPick:adPick,adAddEv:adAddEv,adDelEv:adDelEv,adRBackup:adRBackup,adMore:adMore,adPassModal:adPassModal,adPassSave:adPassSave,adGS:adGS,adProfile:adProfile,adDevModal:adDevModal,adSetDev:adSetDev,adInstall:adInstall,installSaberApp:installSaberApp});
  var m=document.querySelector('main.main');AD_TABS.forEach(function(id){var s=document.createElement('section');s.id='view-'+id;s.className='view';m.appendChild(s)});
  var nav=document.querySelector('.topnav');if(nav)nav.insertAdjacentHTML('afterbegin','<div class="nav-item" data-tab="center" data-ad="1">مرکز</div>');
  var ul=document.querySelector('.side-menu'),st=ul.querySelector('[data-tab=settings]');
  ul.insertAdjacentHTML('afterbegin','<li data-tab="center" data-ad="1">🎖 مرکز من</li>');
  st.insertAdjacentHTML('beforebegin','<li data-tab="tasks" data-ad="1">☑ صندوق وظایف</li><li data-tab="calendar" data-ad="1">🗓 تقویم برنامه‌ها</li><li data-tab="scores" data-ad="1">⭐ کارنامه اعضا</li><li data-tab="backup" data-ad="1">💾 پشتیبان‌گیری</li>');
- ul.insertAdjacentHTML('beforeend','<li role="button" tabindex="0" onclick="adPassModal(false);adMore(false)">🔑 تغییر رمز عبور</li><li class="ad-inst" role="button" tabindex="0" onclick="installSaberApp();adMore(false)">📲 نصب برنامه</li><li class="ad-out" role="button" tabindex="0" onclick="adMore(false);lockNow()">🚪 خروج</li>');
- var br=document.querySelector('.topbar .brand');if(br)br.insertAdjacentHTML('afterend','<div id="gs"><input id="gsq" type="search" aria-label="جستجو در اعضا، برنامه‌ها، جلسات و گزارش‌ها" placeholder="🔍 جستجو…" autocomplete="off"><div id="gsr"></div></div>');
- var gq=document.getElementById('gsq');if(gq){gq.addEventListener('input',function(){adGS(gq.value)});gq.addEventListener('keydown',function(e){if(e.key==='Escape'){gq.value='';adGS('')}});document.getElementById('gsr').addEventListener('click',function(e){var b=e.target.closest('button[data-t]');if(b)adGo(b.dataset.t,b.dataset.i)});document.addEventListener('click',function(e){if(!e.target.closest('#gs'))document.getElementById('gsr').style.display='none'})}
+ ul.insertAdjacentHTML('beforeend','<li role="button" tabindex="0" onclick="adPassModal(false);adMore(false)">🔑 تغییر رمز عبور</li><li role="button" tabindex="0" onclick="adDevModal();adMore(false)">🖥 نوع دستگاه</li><li class="ad-inst" role="button" tabindex="0" onclick="installSaberApp();adMore(false)">📲 نصب برنامه</li><li class="ad-out" role="button" tabindex="0" onclick="adMore(false);lockNow()">🚪 خروج</li>');
+ var br=document.querySelector('.topbar .brand');if(br)br.insertAdjacentHTML('afterend','<div id="gs" role="search"><svg class="gi" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="gsq" type="search" autocomplete="off" placeholder="جستجو: نام، سمت، کد ملی، تلفن…" aria-label="جستجوی افراد"><button id="gsx" aria-label="پاک کردن جستجو" hidden>×</button><div id="gsr" role="listbox"></div></div>');
+ var gq=document.getElementById('gsq'),gr=document.getElementById('gsr'),gx=document.getElementById('gsx'),last={i:'',t:0};
+ if(gq){gq.addEventListener('input',function(){adGS(gq.value)});gq.addEventListener('focus',function(){if(gq.value)adGS(gq.value)});
+  gq.addEventListener('keydown',function(e){if(e.key==='Escape'){gq.value='';adGS('')}else if(e.key==='ArrowDown'){var f=gr.querySelector('button');if(f){f.focus();e.preventDefault()}}});
+  gx.addEventListener('click',function(){gq.value='';adGS('');gq.focus()});
+  gr.addEventListener('keydown',function(e){var bs=[].slice.call(gr.querySelectorAll('button[data-i]')),i=bs.indexOf(document.activeElement);if(e.key==='ArrowDown'&&bs[i+1]){bs[i+1].focus();e.preventDefault()}else if(e.key==='ArrowUp'){(bs[i-1]||gq).focus();e.preventDefault()}});
+  gr.addEventListener('click',function(e){var b=e.target.closest('button[data-i]');if(!b)return;var now=Date.now();if(e.detail===0||(last.i===b.dataset.i&&now-last.t<500)){last={i:'',t:0};gr.style.display='none';adProfile(b.dataset.i)}else{last={i:b.dataset.i,t:now};gr.querySelectorAll('.sel').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel')}});
+  document.addEventListener('click',function(e){if(!e.target.closest('#gs'))gr.style.display='none'})}
+ var vs=document.getElementById('view-settings');if(vs)vs.insertAdjacentHTML('beforeend','<div class="card"><div class="panel-title">نوع دستگاه</div><p class="muted">چیدمان سامانه بر اساس نوع دستگاه و عرض صفحه تنظیم می‌شود.</p><button class="btn" onclick="adDevModal()">تغییر نوع دستگاه</button></div>');
+ var rz;window.addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(devLayout,150)});window.addEventListener('orientationchange',function(){setTimeout(devLayout,200)});
  document.addEventListener('click',function(e){if(document.body.classList.contains('more')&&!e.target.closest('.sidebar')&&!e.target.closest('#bmore'))adMore(false)});
  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();adDef=e;document.body.classList.add('can-install')});window.addEventListener('appinstalled',function(){adDef=null;document.body.classList.remove('can-install')});
  document.addEventListener('click',function(e){var t=e.target.closest('[data-ad]');if(t){switchTab(t.getAttribute('data-tab'));adMore(false)}});
@@ -1039,7 +1080,13 @@ function openMemberRequestModal(){
           <div class="field"><label>نام و نام خانوادگی *</label><input id="reqName" required></div>
           <div class="field"><label>نام پدر</label><input id="reqFather"></div>
           <div class="field"><label>کد ملی</label><input id="reqNational" inputmode="numeric" maxlength="10"></div>
+          <div class="field"><label>تاریخ تولد</label><input id="reqBirth" placeholder="مثلاً ۱۳۸۷/۰۵/۱۲"></div>
+          <div class="field"><label>گروه خونی</label><select id="reqBlood">${['-','A+','A-','B+','B-','AB+','AB-','O+','O-'].map(x=>'<option>'+x+'</option>').join('')}</select></div>
           <div class="field"><label>مسئولیت پیشنهادی</label><input id="reqRole" value="عضو"></div>
+          <div class="field"><label>وضعیت عضویت</label><select id="reqStatus"><option>فعال</option><option>غیرفعال</option></select></div>
+          <div class="field"><label>شماره تماس</label><input id="reqPhone" inputmode="tel"></div>
+          <div class="field full"><label>سابقه عضویت</label><input id="reqHistory"></div>
+          <div class="field full"><label>دوره‌های فرهنگی و آموزشی</label><input id="reqCourses" placeholder="با ویرگول جدا کنید"></div>
           <div class="field full"><label>توضیحات</label><textarea id="reqNotes"></textarea></div>
         </div>
         <div class="form-actions">
@@ -1065,6 +1112,12 @@ function submitMemberRequest(){
     father: (document.getElementById('reqFather').value||'').trim(),
     nationalId: nid,
     role: (document.getElementById('reqRole').value||'عضو').trim(),
+    birthDate: (document.getElementById('reqBirth').value||'').trim(),
+    blood: document.getElementById('reqBlood').value||'-',
+    phone: en(document.getElementById('reqPhone').value||'').trim(),
+    status2: document.getElementById('reqStatus').value||'فعال',
+    history: (document.getElementById('reqHistory').value||'').trim(),
+    courses: (document.getElementById('reqCourses').value||'').trim(),
     notes: (document.getElementById('reqNotes').value||'').trim(),
     status: 'pending',
     requestedBy: u ? u.displayName : 'ناشناس',
@@ -1095,13 +1148,13 @@ function approveMemberRequest(id){
     name: req.name,
     father: req.father||'',
     nationalId: req.nationalId||'',
-    birthDate: '',
-    blood: '-',
-    phone: '',
+    birthDate: req.birthDate||'',
+    blood: req.blood||'-',
+    phone: req.phone||'',
     role: req.role||'عضو',
-    status: 'فعال',
-    history: '',
-    courses: '',
+    status: req.status2||'فعال',
+    history: req.history||'',
+    courses: req.courses||'',
     notes: req.notes||''
   };
   state.members.push(obj);

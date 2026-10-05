@@ -1,6 +1,6 @@
 // Service Worker سامانه صابر
 const CACHE = 'saber-v1';
-const FILES = ['/', '/index.html', '/manifest.json', '/offline.html', '/icon.svg'];
+const FILES = ['./', './index.html', './manifest.json', './offline.html', './icon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -31,7 +31,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE).then((c) => c.put(req, copy));
           return res;
         })
-        .catch(() => caches.match(req).then((r) => r || caches.match('/offline.html')))
+        .catch(() => caches.match(req).then((r) => r || caches.match('./offline.html')))
     );
     return;
   }
