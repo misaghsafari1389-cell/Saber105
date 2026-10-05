@@ -1,6 +1,6 @@
 // Service Worker سامانه صابر
-const CACHE = 'saber-v1';
-const FILES = ['./', './index.html', './manifest.json', './offline.html', './icon.svg'];
+const CACHE = 'saber-v4';
+const FILES = ['./', './index.html', './manifest.json', './offline.html', './icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./apple-touch-icon.png','./favicon-32.png','./logo.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
