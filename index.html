@@ -206,6 +206,47 @@ body.m .device-opt:hover{transform:none}
 @media(max-width:1180px){.topnav{display:none}}
 body.m #gsr{position:fixed;top:54px;inset-inline:8px;max-height:calc(100vh - 150px)}
 body.m #gsq{padding:0 40px 0 38px}
+#view-center,#view-tasks,#view-calendar,#view-scores,#view-backup,#view-settings{padding-bottom:30px}
+#view-tasks .card,#view-calendar .card,#view-scores .card,#view-backup .card,#view-settings .card,#view-members .card{margin-bottom:20px}
+.cx{display:grid;gap:22px}
+.cxh{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.cxh h2{margin:0 0 4px;font-size:24px}.cxh p{margin:0;color:var(--muted);font-size:13px}
+.cxr{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.cxd{padding:8px 16px;border:1px solid var(--border);border-radius:20px;font-weight:700;background:var(--card)}
+.cxseg{display:flex;border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.cxseg button{border:0;background:var(--card);color:var(--text);padding:8px 16px;cursor:pointer;font:inherit;font-size:13px}.cxseg button.on{background:var(--primary);font-weight:700}
+.cxs{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.cx2{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:start}
+.cc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px}
+.cc .panel-title{margin-bottom:14px;font-size:15px}
+.cs small{display:block;color:var(--muted);font-size:12px;margin-bottom:10px}.cs b{display:block;font-size:28px;line-height:1.3}.cs span{display:block;color:var(--muted);font-size:12px;margin-top:6px}
+.adtiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.adtile{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px 12px;border:1px solid var(--border);border-radius:14px;background:var(--card);color:var(--text);cursor:pointer;font:inherit;text-align:center}
+.adtile:hover{border-color:var(--light);background:var(--primary)}.adtile .ti{font-size:28px}.adtile b{font-size:14px}.adtile small{color:var(--muted);font-size:11px}
+.adtile em{position:absolute;top:8px;left:10px;background:var(--danger);color:#fff;border-radius:10px;padding:0 7px;font-size:11px;font-style:normal}
+.adhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.adorg{direction:ltr;overflow:auto;max-height:72vh;padding:26px 18px;border:1px solid var(--border);border-radius:14px;background:var(--card)}
+.adtree,.adtree ul{display:flex;justify-content:center;margin:0;padding:22px 0 0;list-style:none;position:relative}
+.adtree{padding-top:0;width:max-content;min-width:100%}
+.adtree li{position:relative;text-align:center;padding:22px 10px 0;display:flex;flex-direction:column;align-items:center}
+.adtree li::before,.adtree li::after{content:'';position:absolute;top:0;right:50%;width:50%;height:22px;border-top:2px solid var(--bc)}
+.adtree li::after{right:auto;left:50%;border-left:2px solid var(--bc)}
+.adtree li:only-child::before,.adtree li:only-child::after{display:none}
+.adtree li:first-child::before,.adtree li:last-child::after{border:0}
+.adtree li:last-child::before{border-right:2px solid var(--bc);border-radius:0 8px 0 0}
+.adtree li:first-child::after{border-radius:8px 0 0 0}
+.adtree li:only-child{padding-top:0}
+.adtree>li{padding-top:0}.adtree>li::before,.adtree>li::after{display:none}
+.adtree ul::before{content:'';position:absolute;top:0;left:50%;border-left:2px solid var(--bc);height:22px}
+.adn{direction:rtl;min-width:140px;max-width:200px;padding:12px 16px;border:2px solid var(--bc);border-radius:14px;background:var(--surface);position:relative}
+.adn.root{background:var(--bc);color:#1a1a1a}.adn.root .adt{color:#1a1a1a}
+.adt{font-size:11px;color:var(--bc);font-weight:700;margin-bottom:4px}.adm{font-weight:800;font-size:14px}
+.ada{display:flex;gap:6px;justify-content:center;margin-top:8px}.ada button{min-width:30px;min-height:30px;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:8px;cursor:pointer;font-size:14px}
+.adu{padding:14px 0;border-bottom:1px solid var(--border)}.adchk{display:flex;align-items:center;gap:8px;font-size:12px}.adchk input{width:auto}
+body.m .cxs{grid-template-columns:1fr 1fr;gap:14px}body.m .cx2{grid-template-columns:1fr}body.m .cx{gap:16px}body.m .cc{padding:16px}
+body.m .adtiles{grid-template-columns:1fr 1fr;gap:12px}body.m .cxh h2{font-size:20px}body.m .cs b{font-size:20px}
+@media(max-width:1000px){.cxs{grid-template-columns:1fr 1fr}.cx2{grid-template-columns:1fr}}
+body[data-role=hr] button[onclick*="openMemberModal"],body[data-role=hr] button[onclick*="toggleMemberStatus"]{display:none!important}
 </style>
 </head>
 <body data-project="سامانه صابر بسیج" data-project-status="closed-final">
@@ -426,8 +467,8 @@ body.m #gsq{padding:0 40px 0 38px}
 </section>
 
 <section id="view-eval" class="view">
-  <div class="page-head"><div><h1>ارزیابی عملکرد</h1><p>امتیاز ۰ تا ۱۰۰ برای پنج معیار و میانگین نهایی</p></div><button class="btn" onclick="saveEvaluations()">💾 ذخیره ارزیابی‌ها</button></div>
-  <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>عضو</th><th>حضور</th><th>مسئولیت‌پذیری</th><th>مشارکت</th><th>گزارش‌دهی</th><th>انضباط</th><th>میانگین</th><th>عملیات</th></tr></thead><tbody id="evalBody"></tbody></table></div></div>
+  <div class="page-head"><div><h1>ارزیابی عملکرد</h1><p>همه نمره‌ها را خودتان وارد می‌کنید؛ سامانه چیزی را خودکار محاسبه نمی‌کند</p></div><button class="btn" onclick="saveEvaluations()">💾 ذخیره ارزیابی‌ها</button></div>
+  <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>عضو</th><th>حضور</th><th>مسئولیت‌پذیری</th><th>مشارکت</th><th>گزارش‌دهی</th><th>انضباط</th><th>نمره نهایی (دستی)</th><th>توضیح</th></tr></thead><tbody id="evalBody"></tbody></table></div></div>
 </section>
 
 <section id="view-letters" class="view">
@@ -609,7 +650,7 @@ function adGS(q){var box=document.getElementById('gsr'),x=document.getElementByI
  if(!tk.length){box.innerHTML='';box.style.display='none';return}
  var hit=(state.members||[]).filter(function(m){var t=adNorm(Object.keys(m).filter(function(k){return k!=='id'&&typeof m[k]!=='object'}).map(function(k){return m[k]}).join(' '));return tk.every(function(w){return t.indexOf(w)>-1})});
  hit.sort(function(a,b){return(adNorm(b.name).indexOf(tk[0])===0)-(adNorm(a.name).indexOf(tk[0])===0)});
- box.innerHTML=hit.length?'<div class="gh">'+fa(hit.length)+' نفر · برای دیدن پرونده، روی نام دوبار کلیک کنید</div>'+hit.slice(0,40).map(function(m){return '<button role="option" data-i="'+esc(m.id)+'"><span class="av">'+esc((m.name||'؟').trim().charAt(0))+'</span><span>'+esc(m.name)+'</span></button>'}).join(''):'<div class="gh">فردی پیدا نشد</div>';box.style.display='block'}
+ box.innerHTML=hit.length?'<div class="gh">'+fa(hit.length)+' نفر · برای دیدن پرونده، روی نام دوبار کلیک کنید</div>'+hit.slice(0,40).map(function(m){return '<button role="option" data-i="'+esc(m.id)+'"><span class="av">'+esc((m.name||'؟').trim().charAt(0))+'</span><span>'+esc(m.name)+'</span></button>'}).join(''):'<div class="gh">فردی پیدا نشد</div>';box.style.display='block';adPlaceGS()}
 function adProfile(id){var m=(state.members||[]).filter(function(x){return x.id===id})[0];if(!m)return;
  var L={name:'نام و نام خانوادگی',father:'نام پدر',nationalId:'کد ملی',birthDate:'تاریخ تولد',blood:'گروه خونی',phone:'شماره تماس',role:'سمت',status:'وضعیت',history:'سوابق',courses:'دوره‌ها',notes:'توضیحات'},keys=Object.keys(L).concat(Object.keys(m).filter(function(k){return k!=='id'&&!L[k]&&typeof m[k]!=='object'})),
  row=function(a,b){return '<div class="adrow"><b>'+esc(a)+'</b><span style="text-align:left;white-space:pre-wrap">'+esc(b==null||b===''?'—':/^(19|20)\d\d-\d\d-\d\d$/.test(b)?adJD(b):b)+'</span></div>'},
@@ -626,8 +667,77 @@ function adProfile(id){var m=(state.members||[]).filter(function(x){return x.id=
 function adDevModal(){var t=getDeviceType()||adDetect(),r=document.getElementById('modalRoot');r.classList.remove('hidden');
  r.innerHTML='<div class="modal-root" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3>نوع دستگاه</h3><button class="close" aria-label="بستن" onclick="closeModal()">×</button></div><div class="modal-body"><p class="muted">انتخاب فعلی: '+(t==='mobile'?'اندروید / گوشی':'ویندوز / کامپیوتر')+'. اگر روی گوشی «Desktop site» را روشن کنید و عرض صفحه از ۹۰۰ پیکسل بیشتر شود، چیدمان کامپیوتر خودکار اعمال می‌شود.</p><div class="adlinks"><button class="btn" onclick="adSetDev(\'desktop\')">🖥️ ویندوز / کامپیوتر</button><button class="btn" onclick="adSetDev(\'mobile\')">📱 اندروید / گوشی</button></div></div></div></div>'}
 function adSetDev(t){setDeviceType(t);devLayout();closeModal();toast('نوع دستگاه تغییر کرد')}
+/* ===== v6: ساختار، مرکز من، تنظیمات، نمره دستی ===== */
+var K_ORG='saber_org_v2';
+var AD_T={att:['attendance','✓','حضور و غیاب','ثبت حضور جلسه'],mem:['members','👥','اعضا','فهرست و پرونده‌ها'],req:['REQ','➕','درخواست عضو جدید','ثبت درخواست عضویت'],org:['ORG','🏛','ساختار پایگاه','نمودار هرمی'],prog:['programs','◈','برنامه‌ها','فرهنگی و آموزشی'],meet:['meetings','📅','جلسات','ثبت و پیگیری'],rep:['reports','▤','گزارش کار','گزارش فعالیت‌ها'],task:['tasks','☑','وظایف','محول‌کردن و پیگیری'],cal:['calendar','🗓','تقویم','رویدادهای شمسی'],eval:['eval','🏅','ارزیابی و نمره','نمره‌دهی دستی'],course:['courses','🎓','دوره‌ها','دوره‌های آموزشی'],phone:['PHONE','☎','دفترچه تلفن','شماره تماس اعضا'],letter:['letters','✉','اطلاعیه','نامه و اطلاع‌رسانی'],arch:['archive','📁','آرشیو','اسناد و بایگانی'],bk:['backup','💾','پشتیبان‌گیری','ذخیره و بازیابی']};
+AD_CEN=[{n:'مرکز فرماندهی',t:['att','mem','req','org','prog','meet','rep','task','cal','eval','letter','bk']},{n:'مرکز جانشینی',t:['task','prog','meet','cal','att','rep','mem','org']},{n:'مرکز بازرسی',t:['mem','att','eval','rep','arch','phone']},{n:'مرکز سرمایه انسانی',t:['mem','req','org','att','course','eval','phone']}];
+
+function adCanMem(){var r=adRole();return r==='commander'||r==='deputy'||r==='intel'}
+function adCanOrg(){var u=currentUser();return !!u&&u.orgEdit!==false}
+function adUsers(){return get(K.users,[])||[]}
+
+/* ---- ساختار هرمی ---- */
+function adOrg(){var o=get(K_ORG,null);if(!Array.isArray(o)||!o.length){var u={};adUsers().forEach(function(x){u[x.id]=x});var nm=function(id,d){return u[id]?u[id].displayName:d},tt=function(id,d){return u[id]?u[id].orgRole:d};
+ o=[{id:'o-cmd',name:nm('u-commander','علی آذربویه'),title:tt('u-commander','فرمانده'),parent:'',color:'#d4a017',userId:'u-commander',locked:1},{id:'o-deputy',name:nm('u-deputy','صالح صفری'),title:tt('u-deputy','جانشین'),parent:'o-cmd',color:'#3b82f6',userId:'u-deputy'},{id:'o-intel',name:nm('u-intel','سعید سلمانی'),title:tt('u-intel','بازرسی و اطلاعات'),parent:'o-cmd',color:'#f59e0b',userId:'u-intel'},{id:'o-hr',name:nm('u-hr','علی گلستانی'),title:tt('u-hr','سرمایه انسانی'),parent:'o-cmd',color:'#22c55e',userId:'u-hr'}];put(K_ORG,o)}return o}
+function adOrgHTML(N,edit){var by={},ids={};N.forEach(function(n){ids[n.id]=1});N.forEach(function(n){var p=ids[n.parent]?n.parent:'';(by[p]=by[p]||[]).push(n)});
+ function li(n,pc){var c=n.color||pc,k=by[n.id]||[];return '<li style="--bc:'+esc(c)+'"><div class="adn'+(n.locked?' root':'')+'"><div class="adt">'+esc(n.title)+'</div><div class="adm">'+esc(n.name)+'</div>'+(edit?'<div class="ada">'+(n.locked?'':'<button aria-label="ویرایش '+esc(n.name)+'" onclick="adOrgModal(\''+esc(n.id)+'\')">✎</button>')+'<button aria-label="افزودن زیرمجموعه برای '+esc(n.name)+'" onclick="adOrgModal(\'\',\''+esc(n.id)+'\')">＋</button></div>':'')+'</div>'+(k.length?'<ul>'+k.map(function(x){return li(x,c)}).join('')+'</ul>':'')+'</li>'}
+ return '<ul class="adtree">'+(by['']||[]).map(function(n){return li(n,'#888')}).join('')+'</ul>'}
+function adOrgView(view){var box=document.createElement('div'),can=adCanOrg();box.className='card hr-dynamic hr-structure';
+ box.innerHTML='<div class="adhead"><div><div class="panel-title">ساختار پایگاه</div><p class="muted">'+(can?'روی ✎ بزنید تا نام، عنوان یا سرشاخه هر نفر عوض شود، و با ＋ زیرمجموعه اضافه کنید. جایگاه فرمانده ثابت است.':'نمایش ساختار پایگاه.')+'</p></div>'+(can?'<button class="btn" onclick="adOrgModal()">➕ افزودن به ساختار</button>':'')+'</div><div class="adorg" id="adOrgBox">'+adOrgHTML(adOrg(),can)+'</div>';view.appendChild(box);var o=box.querySelector('#adOrgBox');o.scrollLeft=(o.scrollWidth-o.clientWidth)/2}
+function adOrgRe(){var v=document.getElementById('view-members');if(v&&window.__hrTab==='structure'&&v.classList.contains('active'))switchHRTab('structure')}
+function adOrgModal(id,par,pre){if(!adCanOrg())return toast('دسترسی ویرایش ساختار ندارید');var N=adOrg(),n=id?N.filter(function(x){return x.id===id})[0]:null;if(n&&n.locked)return toast('جایگاه فرمانده قابل تغییر نیست');pre=pre||{};
+ var bad={};if(n){bad[n.id]=1;var ch=true;while(ch){ch=false;N.forEach(function(x){if(!bad[x.id]&&bad[x.parent]){bad[x.id]=1;ch=true}})}}
+ var def=N.some(function(x){return x.id==='o-deputy'})?'o-deputy':N[0].id,pv=n?n.parent:(par||def),pn=N.filter(function(x){return x.id===pv})[0],col=n?n.color:(pn?pn.color:'#3b82f6');
+ var opts=N.filter(function(x){return !bad[x.id]}).map(function(x){return '<option value="'+esc(x.id)+'"'+(x.id===pv?' selected':'')+'>'+esc(x.title+' — '+x.name)+'</option>'}).join('');
+ var r=document.getElementById('modalRoot');r.classList.remove('hidden');
+ r.innerHTML='<div class="modal-root" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3>'+(n?'ویرایش در ساختار':'افزودن به ساختار')+'</h3><button class="close" aria-label="بستن" onclick="closeModal()">×</button></div><div class="modal-body"><div class="form-grid"><input type="hidden" id="aoI" value="'+(n?esc(n.id):'')+'"><input type="hidden" id="aoR" value="'+esc(pre.req||'')+'"><div class="field"><label>نام و نام خانوادگی *</label><input id="aoN" value="'+esc(n?n.name:(pre.name||''))+'"></div><div class="field"><label>عنوان / مسئولیت *</label><input id="aoT" value="'+esc(n?n.title:(pre.title||''))+'"></div><div class="field full"><label>زیرمجموعه چه کسی باشد؟</label><select id="aoP">'+opts+'</select></div><div class="field"><label>رنگ در نمودار</label><input id="aoC" type="color" value="'+esc(col)+'"></div></div><div class="form-actions"><button class="btn" onclick="adOrgSave()">ذخیره</button>'+(n?'<button class="btn danger" onclick="adOrgDel(\''+esc(n.id)+'\')">حذف از ساختار</button>':'')+'<button class="btn ghost" onclick="closeModal()">انصراف</button></div></div></div></div>'}
+function adOrgSave(){var v=function(i){return document.getElementById(i).value.trim()},N=adOrg(),id=v('aoI'),name=v('aoN'),title=v('aoT'),par=v('aoP');if(!name||!title)return toast('نام و عنوان را وارد کنید');
+ var n=id?N.filter(function(x){return x.id===id})[0]:null;if(n){n.name=name;n.title=title;n.parent=par;n.color=v('aoC')}else{n={id:uid(),name:name,title:title,parent:par,color:v('aoC')};var q=v('aoR');if(q)n.reqId=q;N.push(n)}
+ put(K_ORG,N);if(n.userId){var us=adUsers();us.forEach(function(u){if(u.id===n.userId){u.displayName=name;u.orgRole=title}});put(K.users,us);state.users=us;try{updateTopUser()}catch(e){}}
+ closeModal();adOrgRe();toast('ساختار ذخیره شد')}
+function adOrgDel(id){if(!confirm('این مورد از ساختار حذف شود؟ زیرمجموعه‌هایش به سرشاخه همین مورد منتقل می‌شوند.'))return;var N=adOrg(),n=N.filter(function(x){return x.id===id})[0];if(!n||n.locked)return;N.forEach(function(x){if(x.parent===id)x.parent=n.parent});put(K_ORG,N.filter(function(x){return x.id!==id}));closeModal();adOrgRe();toast('از ساختار حذف شد')}
+function adOrgFromReq(rid){var q=(get(K.memberRequests,[])||[]).filter(function(x){return x.id===rid})[0];if(!q)return;adOrgModal('','',{name:q.name,title:q.role||'عضو',req:rid})}
+function adReqActions(r){var h='',ok=adCanMem();if(r.status==='pending'&&ok)h+='<button class="btn small" onclick="approveMemberRequest(\''+r.id+'\')">تأیید</button> ';if(r.status!=='rejected'&&adCanOrg())h+='<button class="btn small ghost" onclick="adOrgFromReq(\''+r.id+'\')">افزودن به ساختار</button> ';if(r.status==='pending'&&ok)h+='<button class="btn small danger" onclick="rejectMemberRequest(\''+r.id+'\')">رد</button>';return h||'—'}
+
+/* ---- مرکز من ---- */
+function adBdays(){var jm=adG2J(adTP().year,adTP().month,adTP().day),out=[];(state.members||[]).forEach(function(m){var d=en(m.birthDate||'').split(/\D+/).filter(Boolean);if(d.length>=3&&d[0].length===4&&+d[1]===jm[1])out.push([+d[2],m.name])});return out.sort(function(a,b){return a[0]-b[0]})}
+function adGoT(k){if(k==='REQ')return openMemberRequestModal();if(k==='PHONE')return adPhones();if(k==='ORG'){window.__hrTab='structure';return switchTab('members')}switchTab(k)}
+function adPhones(){var r=document.getElementById('modalRoot');r.classList.remove('hidden');var ms=(state.members||[]).filter(function(m){return m.phone});r.innerHTML='<div class="modal-root" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3>دفترچه تلفن اعضا</h3><button class="close" aria-label="بستن" onclick="closeModal()">×</button></div><div class="modal-body">'+(ms.length?ms.map(function(m){return '<div class="adrow"><b>'+esc(m.name)+'</b><a href="tel:'+esc(m.phone)+'" dir="ltr">'+esc(m.phone)+'</a></div>'}).join(''):'<p class="muted">برای هیچ عضوی شماره تماس ثبت نشده است.</p>')+'</div></div></div>'}
+function adRCenter(){var r=adRole(),acc=AD_ACC[r]||[0],c=AD_CEN[adCen],ms=state.members||[],act=ms.filter(function(m){return m.status==='فعال'}).length,td=adISO(),T=adT().filter(function(t){return t.status!==AD_ST[2]}),
+ ev=adAllEv().filter(function(e){return e.date&&e.date>=td}).sort(function(a,b){return a.date.localeCompare(b.date)}),rq=adReq(),u=currentUser()||{};
+ var soon=[];ev.slice(0,5).forEach(function(e){soon.push('<div class="adrow"><div><b>'+esc(e.title)+'</b></div><small>'+adJD(e.date)+'</small></div>')});T.sort(function(a,b){return(a.due||'9').localeCompare(b.due||'9')}).slice(0,4).forEach(function(t){soon.push('<div class="adrow'+(t.due&&t.due<td?' late':'')+'"><div><b>☑ '+esc(t.title)+'</b></div><small>'+(t.due?'مهلت '+adJD(t.due):'بدون مهلت')+'</small></div>')});
+ var al=adAlerts().filter(function(a){return a[0]!=='ok'||true}),bd=adBdays();
+ var alH='<ul class="adal">'+al.map(function(a){return '<li class="'+a[0]+'">'+esc(a[1])+'</li>'}).join('')+bd.map(function(b){return '<li class="info">🎂 تولد '+esc(b[1])+' — '+fa(b[0])+' '+AD_MN[adG2J(adTP().year,adTP().month,adTP().day)[1]-1]+'</li>'}).join('')+'</ul>';
+ var tiles=c.t.map(function(k){var d=AD_T[k];return '<button class="adtile" onclick="adGoT(\''+d[0]+'\')"><span class="ti">'+d[1]+'</span><b>'+d[2]+'</b><small>'+d[3]+'</small>'+(k==='req'&&rq?'<em>'+fa(rq)+'</em>':'')+'</button>'}).join('');
+ var stat=function(l,n,s){return '<div class="cc cs"><small>'+l+'</small><b>'+n+'</b>'+(s?'<span>'+s+'</span>':'')+'</div>'};
+ document.getElementById('view-center').innerHTML='<div class="cx"><div class="cxh"><div><h2>'+c.n+'</h2><p>'+esc(u.displayName||'')+' · '+esc(u.orgRole||'')+'</p></div><div class="cxr">'+(acc.length>1?'<div class="cxseg">'+acc.map(function(i){return '<button class="'+(i===adCen?'on':'')+'" onclick="adSetCen('+i+')">'+AD_CEN[i].n+'</button>'}).join('')+'</div>':'')+'<div class="cxd">'+adJD(td)+'</div></div></div>'+
+ '<div class="cxs">'+stat('اعضای فعال',fa(act),'از '+fa(ms.length)+' عضو')+stat('درخواست‌های در انتظار',fa(rq),'عضویت جدید')+stat('وظایف باز',fa(T.length),'در صندوق وظایف')+stat('برنامه بعدی',ev[0]?adJD(ev[0].date):'—',ev[0]?esc(ev[0].title):'ثبت نشده')+'</div>'+
+ '<div class="cx2"><div class="cc"><div class="panel-title">کارهای پیش‌رو</div>'+(soon.join('')||'<p class="muted">فعلاً کاری ثبت نشده است.</p>')+'</div><div class="cc"><div class="panel-title">یادآوری‌ها</div>'+alH+'</div></div>'+
+ '<div class="cc"><div class="panel-title">دسترسی سریع</div><div class="adtiles">'+tiles+'</div></div></div>'}
+
+/* ---- کارنامه: فقط نمایش نمره‌های دستی ---- */
+function adRScores(){var E=state.evaluations||{},ks=['attendance','responsibility','participation','reporting','discipline'],rows=(state.members||[]).map(function(m){return{m:m,e:E[m.id]||{}}}).sort(function(a,b){return(+b.e.final||-1)-(+a.e.final||-1)}),f=function(v){return v===undefined||v===''?'—':fa(v)};
+ document.getElementById('view-scores').innerHTML='<div class="cc"><div class="adhead"><div><div class="panel-title">کارنامه اعضا</div><p class="muted">همه نمره‌ها دستی ثبت می‌شوند و سامانه چیزی را خودکار محاسبه نمی‌کند.</p></div><button class="btn" onclick="switchTab(\'eval\')">✎ ثبت و ویرایش نمره</button></div>'+
+ (rows.length?rows.map(function(x){return '<div class="adrow"><div><b>'+esc(x.m.name)+'</b><small>حضور '+f(x.e.attendance)+' · مسئولیت '+f(x.e.responsibility)+' · مشارکت '+f(x.e.participation)+' · گزارش '+f(x.e.reporting)+' · انضباط '+f(x.e.discipline)+(x.e.note?' · '+esc(x.e.note):'')+'</small></div><b class="adsc">'+f(x.e.final)+'</b></div>'}).join(''):'<p class="muted">عضوی ثبت نشده است.</p>')+'</div>'}
+function renderEval(){var K6=['attendance','responsibility','participation','reporting','discipline','final'],ms=members();state.evaluations=state.evaluations||{};
+ document.getElementById('evalBody').innerHTML=ms.length?ms.map(function(m){var e=state.evaluations[m.id]||{};return '<tr><td><b>'+esc(m.name)+'</b></td>'+K6.map(function(k){return '<td><input class="control eval-input" aria-label="'+esc(m.name)+' '+k+'" data-member="'+esc(m.id)+'" data-key="'+k+'" type="number" min="0" max="100" value="'+(e[k]===undefined?'':e[k])+'"></td>'}).join('')+'<td><input class="control eval-note" aria-label="توضیح '+esc(m.name)+'" data-member="'+esc(m.id)+'" value="'+esc(e.note||'')+'"></td></tr>'}).join(''):'<tr><td colspan="8" class="empty">عضوی وجود ندارد.</td></tr>';
+ document.querySelectorAll('.eval-input').forEach(function(x){x.addEventListener('input',function(){var id=x.dataset.member;state.evaluations[id]=state.evaluations[id]||{};state.evaluations[id][x.dataset.key]=x.value===''?'':Math.max(0,Math.min(100,+x.value||0))})});
+ document.querySelectorAll('.eval-note').forEach(function(x){x.addEventListener('input',function(){var id=x.dataset.member;state.evaluations[id]=state.evaluations[id]||{};state.evaluations[id].note=x.value})})}
+
+/* ---- تنظیمات ---- */
+function adSetRender(){var b=document.getElementById('adSet');if(!b)return;if(!adCanMem()){b.innerHTML='';return}
+ var us=adUsers(),ms=state.members||[];
+ b.innerHTML='<div class="card"><div class="panel-title">مسئولین سامانه</div><p class="muted">نام، مسئولیت و نام کاربری ورود هر مسئول را اینجا عوض کنید. تغییر نام و مسئولیت در ساختار هم اعمال می‌شود.</p>'+us.map(function(u){return '<div class="adu" data-u="'+esc(u.id)+'"><div class="adform"><div class="field"><label>نام مسئول</label><input data-f="displayName" value="'+esc(u.displayName)+'"></div><div class="field"><label>مسئولیت</label><input data-f="orgRole" value="'+esc(u.orgRole)+'"></div><div class="field"><label>نام کاربری ورود</label><input data-f="username" value="'+esc(u.username)+'"></div><label class="adchk"><input type="checkbox" data-f="orgEdit"'+(u.orgEdit!==false?' checked':'')+'> دسترسی افزودن و ویرایش ساختار</label><button class="btn" onclick="adSaveUser(\''+esc(u.id)+'\')">ذخیره</button></div></div>'}).join('')+'</div>'+
+ '<div class="card"><div class="panel-title">مدیریت اعضا</div><p class="muted">افزودن و ویرایش عضو فقط برای فرمانده، جانشین و بازرسی باز است.</p><div class="adform"><div class="field"><label>انتخاب عضو برای ویرایش</label><select id="adSetMem"><option value="">انتخاب کنید</option>'+ms.map(function(m){return '<option value="'+esc(m.id)+'">'+esc(m.name)+'</option>'}).join('')+'</select></div><button class="btn" onclick="openMemberModal()">➕ افزودن عضو جدید</button><button class="btn ghost" onclick="var i=document.getElementById(\'adSetMem\').value;if(i)openMemberModal(i);else toast(\'ابتدا یک عضو را انتخاب کنید\')">✎ ویرایش عضو انتخاب‌شده</button></div></div>'}
+function adSaveUser(id){var row=document.querySelector('.adu[data-u="'+id+'"]'),g=function(f){return row.querySelector('[data-f='+f+']')},dn=g('displayName').value.trim(),ro=g('orgRole').value.trim(),un=g('username').value.trim();if(!dn||!ro||!un)return toast('نام، مسئولیت و نام کاربری را وارد کنید');
+ var us=adUsers();if(us.some(function(x){return x.id!==id&&x.username===un}))return toast('این نام کاربری برای فرد دیگری است');us.forEach(function(u){if(u.id===id){u.displayName=dn;u.orgRole=ro;u.username=un;u.orgEdit=g('orgEdit').checked}});put(K.users,us);state.users=us;
+ var N=adOrg();N.forEach(function(n){if(n.userId===id){n.name=dn;n.title=ro}});put(K_ORG,N);try{updateTopUser()}catch(e){}toast('اطلاعات مسئول ذخیره شد')}
+
+/* ---- جستجو: نتایج بالاتر از همه ---- */
+function adPlaceGS(){var q=document.getElementById('gsq'),g=document.getElementById('gsr');if(!q||!g)return;var r=q.getBoundingClientRect(),m=document.body.classList.contains('m'),w=m?window.innerWidth-16:Math.max(r.width,320);
+ g.style.cssText+=';position:fixed;z-index:99999;inset-inline:auto;right:auto;left:'+(m?8:Math.max(8,Math.min(r.left,window.innerWidth-w-8)))+'px;top:'+(r.bottom+6)+'px;width:'+w+'px;max-height:'+Math.max(160,window.innerHeight-r.bottom-20)+'px'}
 function AddonInit(){try{
- Object.assign(window,{adRCenter:adRCenter,adSetCen:adSetCen,adAddTask:adAddTask,adCycle:adCycle,adDelTask:adDelTask,adNav:adNav,adPick:adPick,adAddEv:adAddEv,adDelEv:adDelEv,adRBackup:adRBackup,adMore:adMore,adPassModal:adPassModal,adPassSave:adPassSave,adGS:adGS,adProfile:adProfile,adDevModal:adDevModal,adSetDev:adSetDev,adInstall:adInstall,installSaberApp:installSaberApp});
+ Object.assign(window,{adRCenter:adRCenter,adSetCen:adSetCen,adAddTask:adAddTask,adCycle:adCycle,adDelTask:adDelTask,adNav:adNav,adPick:adPick,adAddEv:adAddEv,adDelEv:adDelEv,adRBackup:adRBackup,adMore:adMore,adPassModal:adPassModal,adPassSave:adPassSave,adGS:adGS,adProfile:adProfile,adDevModal:adDevModal,adSetDev:adSetDev,adOrgModal:adOrgModal,adOrgSave:adOrgSave,adOrgDel:adOrgDel,adOrgFromReq:adOrgFromReq,adGoT:adGoT,adPhones:adPhones,adSaveUser:adSaveUser,adInstall:adInstall,installSaberApp:installSaberApp});
  var m=document.querySelector('main.main');AD_TABS.forEach(function(id){var s=document.createElement('section');s.id='view-'+id;s.className='view';m.appendChild(s)});
  var nav=document.querySelector('.topnav');if(nav)nav.insertAdjacentHTML('afterbegin','<div class="nav-item" data-tab="center" data-ad="1">مرکز</div>');
  var ul=document.querySelector('.side-menu'),st=ul.querySelector('[data-tab=settings]');
@@ -635,14 +745,14 @@ function AddonInit(){try{
  st.insertAdjacentHTML('beforebegin','<li data-tab="tasks" data-ad="1">☑ صندوق وظایف</li><li data-tab="calendar" data-ad="1">🗓 تقویم برنامه‌ها</li><li data-tab="scores" data-ad="1">⭐ کارنامه اعضا</li><li data-tab="backup" data-ad="1">💾 پشتیبان‌گیری</li>');
  ul.insertAdjacentHTML('beforeend','<li role="button" tabindex="0" onclick="adPassModal(false);adMore(false)">🔑 تغییر رمز عبور</li><li role="button" tabindex="0" onclick="adDevModal();adMore(false)">🖥 نوع دستگاه</li><li class="ad-inst" role="button" tabindex="0" onclick="installSaberApp();adMore(false)">📲 نصب برنامه</li><li class="ad-out" role="button" tabindex="0" onclick="adMore(false);lockNow()">🚪 خروج</li>');
  var br=document.querySelector('.topbar .brand');if(br)br.insertAdjacentHTML('afterend','<div id="gs" role="search"><svg class="gi" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="gsq" type="search" autocomplete="off" placeholder="جستجو: نام، سمت، کد ملی، تلفن…" aria-label="جستجوی افراد"><button id="gsx" aria-label="پاک کردن جستجو" hidden>×</button><div id="gsr" role="listbox"></div></div>');
- var gq=document.getElementById('gsq'),gr=document.getElementById('gsr'),gx=document.getElementById('gsx'),last={i:'',t:0};
+ var gq=document.getElementById('gsq'),gr=document.getElementById('gsr'),gx=document.getElementById('gsx'),last={i:'',t:0};if(gr)document.body.appendChild(gr);window.addEventListener('resize',adPlaceGS);window.addEventListener('scroll',adPlaceGS,true);
  if(gq){gq.addEventListener('input',function(){adGS(gq.value)});gq.addEventListener('focus',function(){if(gq.value)adGS(gq.value)});
   gq.addEventListener('keydown',function(e){if(e.key==='Escape'){gq.value='';adGS('')}else if(e.key==='ArrowDown'){var f=gr.querySelector('button');if(f){f.focus();e.preventDefault()}}});
   gx.addEventListener('click',function(){gq.value='';adGS('');gq.focus()});
   gr.addEventListener('keydown',function(e){var bs=[].slice.call(gr.querySelectorAll('button[data-i]')),i=bs.indexOf(document.activeElement);if(e.key==='ArrowDown'&&bs[i+1]){bs[i+1].focus();e.preventDefault()}else if(e.key==='ArrowUp'){(bs[i-1]||gq).focus();e.preventDefault()}});
   gr.addEventListener('click',function(e){var b=e.target.closest('button[data-i]');if(!b)return;var now=Date.now();if(e.detail===0||(last.i===b.dataset.i&&now-last.t<500)){last={i:'',t:0};gr.style.display='none';adProfile(b.dataset.i)}else{last={i:b.dataset.i,t:now};gr.querySelectorAll('.sel').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel')}});
-  document.addEventListener('click',function(e){if(!e.target.closest('#gs'))gr.style.display='none'})}
- var vs=document.getElementById('view-settings');if(vs)vs.insertAdjacentHTML('beforeend','<div class="card"><div class="panel-title">نوع دستگاه</div><p class="muted">چیدمان سامانه بر اساس نوع دستگاه و عرض صفحه تنظیم می‌شود.</p><button class="btn" onclick="adDevModal()">تغییر نوع دستگاه</button></div>');
+  document.addEventListener('click',function(e){if(!e.target.closest('#gs')&&!e.target.closest('#gsr'))gr.style.display='none'})}
+ var vs=document.getElementById('view-settings');if(vs)vs.insertAdjacentHTML('beforeend','<div id="adSet"></div>');if(vs)vs.insertAdjacentHTML('beforeend','<div class="card"><div class="panel-title">نوع دستگاه</div><p class="muted">چیدمان سامانه بر اساس نوع دستگاه و عرض صفحه تنظیم می‌شود.</p><button class="btn" onclick="adDevModal()">تغییر نوع دستگاه</button></div>');
  var rz;window.addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(devLayout,150)});window.addEventListener('orientationchange',function(){setTimeout(devLayout,200)});
  document.addEventListener('click',function(e){if(document.body.classList.contains('more')&&!e.target.closest('.sidebar')&&!e.target.closest('#bmore'))adMore(false)});
  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();adDef=e;document.body.classList.add('can-install')});window.addEventListener('appinstalled',function(){adDef=null;document.body.classList.remove('can-install')});
@@ -996,7 +1106,7 @@ function switchHRTab(tab){
 }
 window.switchHRTab = switchHRTab;
 
-function renderOrgStructure(view){
+function renderOrgStructure(view){return adOrgView(view);
   const box = document.createElement('div');
   box.className = 'card hr-dynamic hr-structure';
   box.innerHTML = `<div class="panel-title">ساختار فرماندهی پایگاه</div>
@@ -1055,7 +1165,7 @@ function renderMemberRequests(view){
       <td>${esc(r.requestedBy||'—')}</td>
       <td>${fmtDate(r.date)}</td>
       <td><span class="request-badge ${st}">${esc(r.status==='pending'?'در انتظار':(r.status==='approved'?'تأیید شده':'رد شده'))}</span></td>
-      <td>${r.status==='pending' && hasPerm('hr.requests') ? `<button class="btn small" onclick="approveMemberRequest('${r.id}')">تأیید</button> <button class="btn small danger" onclick="rejectMemberRequest('${r.id}')">رد</button>` : '—'}</td>
+      <td>${adReqActions(r)}</td>
     </tr>`;
   }).join('') : '<tr><td colspan="6" class="empty">درخواستی ثبت نشده است.</td></tr>';
   box.innerHTML = `<div class="panel-title">درخواست‌های نیروی انسانی</div>
@@ -1136,6 +1246,7 @@ function submitMemberRequest(){
 window.submitMemberRequest = submitMemberRequest;
 
 function approveMemberRequest(id){
+  if(!adCanMem()){ toast('تأیید درخواست فقط با فرمانده، جانشین و بازرسی است'); return; }
   if(!hasPerm('hr.requests') && !hasPerm('*')){ toast('مجوز تأیید ندارید'); return; }
   let reqs = get(K.memberRequests, []) || [];
   const req = reqs.find(r=>r.id===id);
@@ -1171,6 +1282,7 @@ function approveMemberRequest(id){
 window.approveMemberRequest = approveMemberRequest;
 
 function rejectMemberRequest(id){
+  if(!adCanMem()){ toast('رد درخواست فقط با فرمانده، جانشین و بازرسی است'); return; }
   if(!hasPerm('hr.requests') && !hasPerm('*')){ toast('مجوز ندارید'); return; }
   let reqs = get(K.memberRequests, []) || [];
   const req = reqs.find(r=>r.id===id);
@@ -1348,7 +1460,7 @@ function renderLatest(){
  document.getElementById('latestReports').innerHTML=rs.length?rs.map(r=>'<tr><td>'+esc(r.title)+'</td><td>'+esc(r.responsible)+'</td><td>'+fmtDate(r.date)+'</td><td>'+statusBadge(r.status)+'</td></tr>').join(''):'<tr><td colspan="4" class="empty">گزارشی وجود ندارد.</td></tr>';
 }
 
-function openMemberModal(id){
+function openMemberModal(id){if(!adCanMem()){toast('افزودن و ویرایش عضو فقط برای فرمانده، جانشین و بازرسی مجاز است');return}
  let m=id?members().find(x=>x.id===id):null;
  let root=document.getElementById('modalRoot');
  root.classList.remove('hidden');
@@ -1380,7 +1492,7 @@ function openMemberModal(id){
 }
 window.openMemberModal=openMemberModal;
 async function saveMember(e){
- e.preventDefault();let id=document.getElementById('mfId').value,name=document.getElementById('mfName').value.trim(),nid=en(document.getElementById('mfNational').value).replace(/\D/g,'');
+ e.preventDefault();if(!adCanMem()){toast('مجوز ویرایش عضو را ندارید');return}let id=document.getElementById('mfId').value,name=document.getElementById('mfName').value.trim(),nid=en(document.getElementById('mfNational').value).replace(/\D/g,'');
  if(!name){toast('نام عضو الزامی است');return}if(!nid){toast('کد ملی الزامی است');return}if(nid.length!==10){toast('کد ملی باید ۱۰ رقم باشد');return}
  let duplicate=members().some(m=>m.nationalId===nid&&m.id!==id);if(duplicate){toast('این کد ملی قبلاً ثبت شده است');return}
  let obj={id:id||uid(),name,father:document.getElementById('mfFather').value.trim(),nationalId:nid,birthDate:document.getElementById('mfBirth').value.trim(),blood:document.getElementById('mfBlood').value,phone:document.getElementById('mfPhone').value.trim(),role:document.getElementById('mfRole').value.trim()||'عضو',status:document.getElementById('mfStatus').value,history:document.getElementById('mfHistory').value.trim(),courses:document.getElementById('mfCourses').value.trim(),notes:document.getElementById('mfNotes').value.trim()};
@@ -1404,7 +1516,7 @@ function viewMember(id){
  </div>`;
 }
 window.viewMember=viewMember;
-function toggleMemberStatus(id){let m=members().find(x=>x.id===id);if(!m)return;m.status=m.status==='فعال'?'غیرفعال':'فعال';state.members=members().map(x=>x.id===id?m:x);put(K.members,state.members);renderAll();switchTab('members');toast('وضعیت عضو به‌روزرسانی شد')}
+function toggleMemberStatus(id){if(!adCanMem()){toast('مجوز ویرایش عضو را ندارید');return}let m=members().find(x=>x.id===id);if(!m)return;m.status=m.status==='فعال'?'غیرفعال':'فعال';state.members=members().map(x=>x.id===id?m:x);put(K.members,state.members);renderAll();switchTab('members');toast('وضعیت عضو به‌روزرسانی شد')}
 function copyMemberNationalId(id){let m=members().find(x=>x.id===id);if(!m)return;let text=m.nationalId||'';if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>toast('کد ملی کپی شد')).catch(()=>toast('کپی خودکار در این مرورگر در دسترس نیست'))}else{let ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('کد ملی کپی شد')}catch(e){toast('کپی خودکار در این مرورگر در دسترس نیست')}ta.remove()}}
 function deleteMember(id){let m=members().find(x=>x.id===id);if(!m)return;if(!confirm('پرونده «'+m.name+'» حذف شود؟'))return;state.members=members().filter(x=>x.id!==id);state.attendance.forEach(a=>delete a.statuses[id]);state.meetings.forEach(x=>x.participants=(x.participants||[]).filter(i=>i!==id));delete state.evaluations[id];saveAll();closeModal();renderAll();toast('عضو حذف شد')}
 window.deleteMember=deleteMember;
@@ -1454,7 +1566,7 @@ function resetLetter(){document.getElementById('letterId').value='';document.get
 function editLetter(id){let l=formItem('letters',id);if(!l)return;document.getElementById('letterId').value=id;document.getElementById('letterTitle').value=l.title;document.getElementById('letterRecipient').value=l.recipient||'';document.getElementById('letterDate').value=l.date||today();document.getElementById('letterMessage').value=l.message||'';switchTab('letters')}
 function viewLetter(id){let l=formItem('letters',id);let r=document.getElementById('modalRoot');r.classList.remove('hidden');r.innerHTML='<div class="modal-root" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3>'+esc(l.title)+'</h3><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><p style="color:var(--muted);font-size:11px">گیرنده: '+esc(l.recipient||'—')+' · '+fmtDate(l.date)+'</p><div class="card" style="line-height:2;font-size:13px;white-space:pre-wrap">'+esc(l.message)+'</div></div></div></div>'}
 
-function renderEval(){
+function renderEvalOld(){
  document.getElementById('evalBody').innerHTML=members().length?members().map(m=>{let e=state.evaluations[m.id]||{attendance:80,responsibility:80,participation:80,reporting:80,discipline:80};let avg=Math.round((+e.attendance+ +e.responsibility+ +e.participation+ +e.reporting+ +e.discipline)/5);return '<tr><td><b>'+esc(m.name)+'</b></td>'+['attendance','responsibility','participation','reporting','discipline'].map(k=>'<td><input class="control eval-input" data-member="'+m.id+'" data-key="'+k+'" type="number" min="0" max="100" value="'+e[k]+'"></td>').join('')+'<td><b class="eval-score" data-score="'+m.id+'">'+fa(avg)+'</b></td><td></td></tr>'}).join(''):'<tr><td colspan="8" class="empty">عضوی وجود ندارد.</td></tr>';
  document.querySelectorAll('.eval-input').forEach(x=>x.addEventListener('input',()=>{let id=x.dataset.member,k=x.dataset.key;state.evaluations[id]=state.evaluations[id]||{attendance:80,responsibility:80,participation:80,reporting:80,discipline:80};state.evaluations[id][k]=Math.max(0,Math.min(100,+x.value||0));let e=state.evaluations[id];let avg=Math.round((+e.attendance+ +e.responsibility+ +e.participation+ +e.reporting+ +e.discipline)/5);document.querySelector('[data-score="'+id+'"]').textContent=fa(avg)}));
 }
@@ -1494,7 +1606,7 @@ function verifyCreatorCode(){let input=document.getElementById('creatorCodeInput
 function endOtherSessions(){let current=get(K.currentSession,'');let sessions=(get(K.sessions,[])||[]).filter(x=>x.id===current);put(K.sessions,sessions);state.sessions=sessions;openCreators();setTimeout(()=>verifyCreatorCodeSilent(),0);toast('تمام نشست‌های دیگر پایان یافتند')}
 function endAllSessions(){if(!confirm('تمام نشست‌های ثبت‌شده پایان داده شوند؟ نشست فعلی هم پایان می‌یابد.'))return;put(K.sessions,[]);state.sessions=[];put(K.currentSession,'');closeModal();lockNow();toast('تمام نشست‌ها پایان یافتند')}
 function verifyCreatorCodeSilent(){let input=document.getElementById('creatorCodeInput');if(input){input.value='0970185839';verifyCreatorCode()}}
-function renderSettings(){document.getElementById('setManager').value=state.settings.manager;document.getElementById('setSystem').value=state.settings.system;document.getElementById('setBase').value=state.settings.base;document.getElementById('setTheme').value=state.settings.theme;document.getElementById('dataStatus').innerHTML='ذخیره‌سازی: <b style="color:var(--light)">دائمی روی همین دستگاه</b> · وضعیت حافظه: '+(storagePersistent()?'فعال':'در دسترس نیست')+'<br>اعضا: '+fa(state.members.length)+' · حضور و غیاب: '+fa(state.attendance.length)+' · برنامه‌ها: '+fa(state.programs.length)+' · جلسات: '+fa(state.meetings.length)+' · صورت جلسات: '+fa(state.minutes.length)+' · گزارش‌ها: '+fa(state.reports.length)+' · دوره‌ها: '+fa(state.courses.length)+' · پیام‌ها: '+fa(state.letters.length)}
+function renderSettings(){adSetRender();document.getElementById('setManager').value=state.settings.manager;document.getElementById('setSystem').value=state.settings.system;document.getElementById('setBase').value=state.settings.base;document.getElementById('setTheme').value=state.settings.theme;document.getElementById('dataStatus').innerHTML='ذخیره‌سازی: <b style="color:var(--light)">دائمی روی همین دستگاه</b> · وضعیت حافظه: '+(storagePersistent()?'فعال':'در دسترس نیست')+'<br>اعضا: '+fa(state.members.length)+' · حضور و غیاب: '+fa(state.attendance.length)+' · برنامه‌ها: '+fa(state.programs.length)+' · جلسات: '+fa(state.meetings.length)+' · صورت جلسات: '+fa(state.minutes.length)+' · گزارش‌ها: '+fa(state.reports.length)+' · دوره‌ها: '+fa(state.courses.length)+' · پیام‌ها: '+fa(state.letters.length)}
 function resetSettings(){state.settings=Object.assign({},defaults.settings);put(K.settings,state.settings);applySettings();renderSettings();toast('تنظیمات پیش‌فرض شد')}
 function deleteRecord(kind,id){if(!state[kind])return;if(!confirm('این رکورد حذف شود؟'))return;state[kind]=state[kind].filter(x=>x.id!==id);put(K[kind],state[kind]);renderAll();toast('رکورد حذف شد')}
 
