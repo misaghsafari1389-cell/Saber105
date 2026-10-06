@@ -1,5 +1,5 @@
 // Service Worker سامانه صابر
-const CACHE = 'saber-v6';
+const CACHE = 'saber-v7';
 const FILES = ['./', './index.html', './manifest.json', './offline.html', './icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./apple-touch-icon.png','./favicon-32.png','./logo.png'];
 
 self.addEventListener('install', (event) => {
@@ -50,3 +50,5 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+self.addEventListener('notificationclick',e=>{e.notification.close();e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(l=>{for(const c of l){if('focus' in c)return c.focus()}return clients.openWindow('./')}))});

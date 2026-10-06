@@ -1970,5 +1970,39 @@ var u=document.getElementById('lockUsername');if(u&&!document.querySelector('.lk
 setInterval(tick,800);tick()
 })();
 </script>
+<script>
+/* NOTIFY v7 */
+(function(){
+var SK='saber_notif_seen_v1',EN='saber_notif_on',lastAct=0;
+function jl(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
+function me(){var s=jl('saber_auth_session',null);if(!s)return null;return (jl('saber_users',[])||[]).find(function(u){return u.id===s.userId})||null}
+function snap(){var m={},r={};(jl('basij_members',[])||[]).forEach(function(x){if(x&&x.id)m[x.id]=x.name||''});(jl('saber_member_requests',[])||[]).forEach(function(x){if(x&&x.id)r[x.id]={s:x.status,by:x.requestedById,n:x.name||'',t:x.type||''}});return{m:m,r:r}}
+var st=document.createElement('style');st.textContent='.nt{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:6000;background:#1f5d42;color:#fff;border-bottom:3px solid #c9a24a;border-radius:6px;padding:10px 16px;max-width:92vw;box-shadow:0 8px 24px rgba(0,0,0,.3);font-size:14px;cursor:pointer}#bellBtn{background:transparent;color:#fff;border:1px solid #fff6;border-radius:6px;padding:6px 9px;cursor:pointer}#bellBtn.on{background:#c9a24a;color:#10281d;border-color:#c9a24a}';document.head.appendChild(st);
+function note(t){var d=document.createElement('div');d.className='nt';d.textContent=t;d.onclick=function(){d.remove()};document.body.appendChild(d);setTimeout(function(){d.remove()},6000)}
+function sys(title,body,tag){if(localStorage.getItem(EN)!=='1'||!('Notification' in window)||Notification.permission!=='granted')return;
+var o={body:body,icon:'icon-192.png',badge:'favicon-32.png',tag:tag,dir:'rtl',lang:'fa',vibrate:[120,60,120]};
+if(navigator.serviceWorker&&navigator.serviceWorker.ready)navigator.serviceWorker.ready.then(function(r){r.showNotification(title,o)}).catch(function(){try{new Notification(title,o)}catch(e){}});else try{new Notification(title,o)}catch(e){}}
+function show(title,body,tag){note(title+' — '+body);sys(title,body,tag)}
+function check(){var u=me();if(!u)return;var cur=snap(),prev=jl(SK,null),now=Date.now();
+function save(c){localStorage.setItem(SK,JSON.stringify({uid:u.id,c:c,m:cur.m,r:cur.r}))}
+if(!prev||prev.uid!==u.id){save(now);return}
+if(now-prev.c<90000){save(prev.c);return}
+if(now-lastAct>=2500){var newM=Object.keys(cur.m).filter(function(id){return !(id in prev.m)}),admin=['commander','deputy','intel'].indexOf(u.systemRole)>=0;
+ if(newM.length>3)show('اعضای جدید ثبت شد',newM.length+' عضو جدید','m-many');else newM.forEach(function(id){show('عضو جدید ثبت شد',cur.m[id]||'—','m-'+id)});
+ Object.keys(cur.r).forEach(function(id){var r=cur.r[id],p=prev.r[id];
+  if(!p&&r.s==='pending'&&r.by!==u.id&&admin)show('درخواست جدید در انتظار تأیید',(r.t?r.t+': ':'')+r.n,'r-'+id);
+  else if(p&&p.s==='pending'&&r.s!=='pending'&&r.by===u.id)show('درخواست شما '+(r.s==='approved'?'تأیید شد':'رد شد'),r.n,'a-'+id)})}
+save(prev.c)}
+['click','submit','keydown'].forEach(function(ev){document.addEventListener(ev,function(){lastAct=Date.now()},true)});
+function paint(){var b=document.getElementById('bellBtn');if(!b)return;var on=localStorage.getItem(EN)==='1'&&'Notification' in window&&Notification.permission==='granted';b.classList.toggle('on',on);b.title=on?'اعلان‌ها فعال است؛ برای خاموش کردن بزنید':'فعال‌سازی اعلان‌ها'}
+function bell(){var l=document.querySelector('.hb-l');if(!l||document.getElementById('bellBtn'))return;var b=document.createElement('button');b.id='bellBtn';b.type='button';b.setAttribute('aria-label','اعلان‌ها');b.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 004 0"/></svg>';l.appendChild(b);paint()}
+document.addEventListener('click',function(e){if(!e.target.closest('#bellBtn'))return;
+if(localStorage.getItem(EN)==='1'){localStorage.setItem(EN,'0');paint();note('اعلان‌های سیستمی خاموش شد');return}
+if(!('Notification' in window)){note('این مرورگر از اعلان پشتیبانی نمی‌کند');return}
+Notification.requestPermission().then(function(p){if(p==='granted'){localStorage.setItem(EN,'1');paint();show('اعلان‌ها فعال شد','از این پس رویدادهای مهم اینجا نمایش داده می‌شود','test')}else note('اجازه داده نشد؛ از تنظیمات مرورگر فعالش کنید')})});
+setInterval(function(){bell();check()},2000);
+setInterval(function(){if(!document.hidden&&navigator.onLine&&localStorage.getItem('saber_srv_token')&&window.syncNow)window.syncNow()},30000);
+})();
+</script>
 </body>
 </html>
