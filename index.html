@@ -328,6 +328,9 @@ body.dk{--bg:#0e1511;--surface:#14201a;--card:#182720;--border:#2a3d33;--text:#e
 body.dk[data-theme] .card,body.dk[data-theme] .cc,body.dk[data-theme] .sidebar,body.dk[data-theme] .modal,body.dk[data-theme] #crumb{background:var(--card)!important;color:var(--text)}
 body.dk[data-theme] tbody tr:nth-child(even){background:#1b2d24}body.dk[data-theme] th{background:#1d3328!important;color:#e6c97a!important}
 body.dk[data-theme] h1,body.dk[data-theme] h2,body.dk[data-theme] h3,body.dk[data-theme] a{color:#e6c97a}
+
+#syncBadge{position:fixed;left:12px;bottom:12px;z-index:970;border:0;border-radius:16px;padding:6px 12px;font:12px/1.4 inherit;font-family:inherit;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);background:#1f5d42}
+#syncBadge[data-s=pend]{background:#9a6b00}#syncBadge[data-s=off]{background:#555}#syncBadge[data-s=auth],#syncBadge[data-s=err]{background:#b3261e}body.m #syncBadge{bottom:76px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap"></head>
 <body data-project="سامانه صابر بسیج" data-project-status="closed-final">
@@ -725,7 +728,7 @@ async function adPassSave(force){var v=function(i){return document.getElementByI
  if(n.length<6)return e('رمز جدید باید حداقل ۶ نویسه باشد.');
  if(n===o)return e('رمز جدید باید با رمز فعلی فرق داشته باشد.');
  if(n!==c)return e('تکرار رمز با رمز جدید یکسان نیست.');
- var h=await sha256(n+'::saber::'+u.id),us=get(K.users,[]);us.forEach(function(x){if(x.id===u.id){x.passwordHash=h;x.mustChange=false;delete x.tempPass}});put(K.users,us);state.users=us;audit('auth.password','تغییر رمز عبور');closeModal();toast('رمز عبور با موفقیت تغییر کرد')}
+ {var sr=await window.__srvPass(o,n);if(sr!=='ok')return e(sr)}var h=await sha256(n+'::saber::'+u.id),us=get(K.users,[]);us.forEach(function(x){if(x.id===u.id){x.passwordHash=h;x.mustChange=false;delete x.tempPass}});put(K.users,us);state.users=us;audit('auth.password','تغییر رمز عبور');closeModal();toast('رمز عبور با موفقیت تغییر کرد')}
 function adNorm(x){return en(String(x==null?'':x)).replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\u064b-\u065f]/g,' ').replace(/\s+/g,' ').trim().toLowerCase()}
 function adGS(q){var box=document.getElementById('gsr'),x=document.getElementById('gsx'),tk=adNorm(q).split(' ').filter(Boolean);if(x)x.hidden=!tk.length;
  if(!tk.length){box.innerHTML='';box.style.display='none';return}
@@ -811,7 +814,7 @@ function adSetRender(){var b=document.getElementById('adSet');if(!b)return;if(!a
  b.innerHTML='<div class="card"><div class="panel-title">مسئولین سامانه</div><p class="muted">نام، مسئولیت و نام کاربری ورود هر مسئول را اینجا عوض کنید. تغییر نام و مسئولیت در ساختار هم اعمال می‌شود.</p>'+us.map(function(u){return '<div class="adu" data-u="'+esc(u.id)+'"><div class="adform"><div class="field"><label>نام مسئول</label><input data-f="displayName" value="'+esc(u.displayName)+'"></div><div class="field"><label>مسئولیت</label><input data-f="orgRole" value="'+esc(u.orgRole)+'"></div><div class="field"><label>نام کاربری ورود</label><input data-f="username" value="'+esc(u.username)+'"></div><label class="adchk"><input type="checkbox" data-f="orgEdit"'+(u.orgEdit!==false?' checked':'')+'> دسترسی افزودن و ویرایش ساختار</label><button class="btn" onclick="adSaveUser(\''+esc(u.id)+'\')">ذخیره</button></div></div>'}).join('')+'</div>'+
  '<div class="card"><div class="panel-title">مدیریت اعضا</div><p class="muted">افزودن و ویرایش عضو فقط برای فرمانده، جانشین و بازرسی باز است.</p><div class="adform"><div class="field"><label>انتخاب عضو برای ویرایش</label><select id="adSetMem"><option value="">انتخاب کنید</option>'+ms.map(function(m){return '<option value="'+esc(m.id)+'">'+esc(m.name)+'</option>'}).join('')+'</select></div><button class="btn" onclick="openMemberModal()">➕ افزودن عضو جدید</button><button class="btn ghost" onclick="var i=document.getElementById(\'adSetMem\').value;if(i)openMemberModal(i);else toast(\'ابتدا یک عضو را انتخاب کنید\')">✎ ویرایش عضو انتخاب‌شده</button></div></div>'}
 function adSaveUser(id){var row=document.querySelector('.adu[data-u="'+id+'"]'),g=function(f){return row.querySelector('[data-f='+f+']')},dn=g('displayName').value.trim(),ro=g('orgRole').value.trim(),un=g('username').value.trim();if(!dn||!ro||!un)return toast('نام، مسئولیت و نام کاربری را وارد کنید');
- var us=adUsers();if(us.some(function(x){return x.id!==id&&x.username===un}))return toast('این نام کاربری برای فرد دیگری است');us.forEach(function(u){if(u.id===id){u.displayName=dn;u.orgRole=ro;u.username=un;u.orgEdit=g('orgEdit').checked}});put(K.users,us);state.users=us;
+ var us=adUsers();if(us.some(function(x){return x.id!==id&&x.username===un}))return toast('این نام کاربری برای فرد دیگری است');us.forEach(function(u){if(u.id===id){u.displayName=dn;u.orgRole=ro;u.username=un;u.orgEdit=g('orgEdit').checked}});put(K.users,us);state.users=us;try{window.__srvUser&&window.__srvUser(id)}catch(e){}
  var N=adOrg();N.forEach(function(n){if(n.userId===id){n.name=dn;n.title=ro}});put(K_ORG,N);try{updateTopUser()}catch(e){}toast('اطلاعات مسئول ذخیره شد')}
 
 /* ---- جستجو: نتایج بالاتر از همه ---- */
@@ -880,7 +883,7 @@ function put(key,value){
  try{
   const safe=cloneValue(value);
   runtimeStore[key]=safe;
-  localStorage.setItem(key,JSON.stringify(safe));
+  localStorage.setItem(key,JSON.stringify(safe));try{window.__sd&&window.__sd(key)}catch(_){}
   return true;
  }catch(e){
   try{runtimeStore[key]=cloneValue(value);return true}catch(_){return false}
@@ -1071,7 +1074,7 @@ function updateTopUser(){
 }
 
 // Replace enterSystem
-async function enterSystem(){
+async function enterSystemLocal(){
   let uInput = (document.getElementById('lockUsername')||{}).value||'';
   let pInput = (document.getElementById('lockPassword')||{}).value||'';
   let err = document.getElementById('lockError');
@@ -1113,12 +1116,12 @@ async function enterSystem(){
   toast('ورود با موفقیت انجام شد — خوش آمدید '+user.displayName);
   setTimeout(()=>document.getElementById('lockScreen').style.display='none',500);
 }
-window.enterSystem = enterSystem;
+window.enterSystemLocal = enterSystemLocal;
 
 // Improved lockNow – clears auth session
 function lockNow(){
   window._landed=null;document.body.dataset.role='';
-  audit('auth.logout', 'خروج از سامانه');
+  audit('auth.logout', 'خروج از سامانه');try{localStorage.removeItem('saber_srv_token')}catch(e){}
   put(K.authSession, null);
   put(K.currentSession, '');
   let ls=document.getElementById('lockScreen');
@@ -1759,7 +1762,7 @@ function renderDataHub(){
  let rows=[];stats.forEach(x=>rows.push('<tr><td>'+esc(x[0])+'</td><td>'+fa(x[1])+'</td><td><span class="badge ok">فعال</span></td><td>دائمی روی همین دستگاه</td></tr>'));
  let body=document.getElementById('dataHubBody');if(body)body.innerHTML=rows.join('');
 }
-Object.assign(window,{addDecisionRow,applySettings,chooseBackupFile,closeModal,copyAllDataText,copyMemberNationalId,deleteMember,deleteRecord,downloadAuditReport,downloadDataBackup,downloadDataJson,downloadDataTxt,editLetter,editMeeting,editProgram,editReport,enterSystem,endAllSessions,endOtherSessions,esc,goHome,lockNow,installSaberApp,loadAttendance,openCreators,openMemberModal,openProtection,renderAll,resetAttendance,resetCourse,resetLetter,resetMeeting,resetMinutes,resetProgram,resetReport,resetSettings,restoreBackupFile,runSystemAudit,saveAll,saveAttendance,saveEvaluations,switchTab,toggleMemberStatus,verifyCreatorCode,viewLetter,viewMember,downloadBlob,toast});
+Object.assign(window,{addDecisionRow,applySettings,chooseBackupFile,closeModal,copyAllDataText,copyMemberNationalId,deleteMember,deleteRecord,downloadAuditReport,downloadDataBackup,downloadDataJson,downloadDataTxt,editLetter,editMeeting,editProgram,editReport,enterSystemLocal,endAllSessions,endOtherSessions,esc,goHome,lockNow,installSaberApp,loadAttendance,openCreators,openMemberModal,openProtection,renderAll,resetAttendance,resetCourse,resetLetter,resetMeeting,resetMinutes,resetProgram,resetReport,resetSettings,restoreBackupFile,runSystemAudit,saveAll,saveAttendance,saveEvaluations,switchTab,toggleMemberStatus,verifyCreatorCode,viewLetter,viewMember,downloadBlob,toast});
 window.__SABER_FUNCTIONS_AUDITED=true;
 
 (function(){
@@ -1840,6 +1843,93 @@ function init(){var h=document.createElement('div');h.id='sbHot';document.body.a
 var sd=document.querySelector('.sidebar');if(sd)sd.addEventListener('mouseleave',function(){if(!B.classList.contains('m'))open(false)});
 banner();panel();setInterval(function(){panel();if(!document.getElementById('hdrBanner'))banner()},1500)}
 if(document.readyState!=='loading')init();else document.addEventListener('DOMContentLoaded',init)
+})();
+
+/* ===== CLOUD SYNC v6 ===== */
+(function(){
+var API;try{API=localStorage.getItem('saber_api')||'https://saber-api.misaghsafari105.workers.dev'}catch(e){API='https://saber-api.misaghsafari105.workers.dev'}
+var SK=['basij_members','saber_attendance','saber_programs','saber_meetings','saber_minutes','saber_reports','saber_courses','saber_evaluations','saber_letters','saber_member_requests','saber_org_structure','saber_org_v2','saber_tasks','saber_events'];
+var SEED={basij_members:['علی رضایی','محمد علوی','رضا کریمی','سینا احمدی','امیرحسین مرادی'],saber_programs:['اردوی فرهنگی و آموزشی','مسابقه ورزشی پایگاه'],saber_meetings:['جلسه هفتگی پایگاه','جلسه برنامه‌ریزی فرهنگی'],saber_reports:['اجرای برنامه فرهنگی','گزارش جلسه هفتگی','گزارش فعالیت آموزشی']};
+function real(k,v){if(!Array.isArray(v)||!SEED[k])return v;return v.filter(function(r){return !(r&&SEED[k].indexOf(r.name||r.title)>=0)})}
+var applying=false,busy=false,timer=null,authLost=false;
+function jl(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
+function js(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function gm(){var m=jl('saber_sync_meta',null)||{};m.ver=m.ver||{};m.dirty=m.dirty||{};m.pu=m.pu||{};return m}
+function sm(m){js('saber_sync_meta',m)}
+function tok(){try{return localStorage.getItem('saber_srv_token')||''}catch(e){return ''}}
+async function api(method,path,body){var c=new AbortController(),t=setTimeout(function(){c.abort()},15000);try{var h={'content-type':'application/json'};if(tok())h.authorization='Bearer '+tok();var r=await fetch(API+path,{method:method,headers:h,body:body?JSON.stringify(body):undefined,signal:c.signal});var j={};try{j=await r.json()}catch(e){}return {ok:r.ok,status:r.status,json:j}}finally{clearTimeout(t)}}
+function eq(a,b){return JSON.stringify(a)===JSON.stringify(b)}
+function rid(r){return r&&typeof r==='object'&&r.id!==undefined?'i:'+r.id:'j:'+JSON.stringify(r)}
+function mp(a){var o={},ord=[];(Array.isArray(a)?a:[]).forEach(function(r){var k=rid(r);if(!(k in o))ord.push(k);o[k]=r});return {o:o,ord:ord}}
+function merge(L,S,B){
+ if(!Array.isArray(L)||!Array.isArray(S))return L!=null?L:S;
+ var l=mp(L),s=mp(S),b=mp(B),out=[],seen={};
+ s.ord.concat(l.ord).forEach(function(k){if(seen[k])return;seen[k]=1;var a=l.o[k],c=s.o[k],bb=b.o[k],hb=k in b.o,r;
+  if(k in l.o&&k in s.o)r=(hb&&eq(a,bb))?c:a;
+  else if(k in l.o)r=(hb&&eq(a,bb))?undefined:a;
+  else r=(hb&&eq(c,bb))?undefined:c;
+  if(r!==undefined)out.push(r)});
+ return out}
+function apply(k,v){applying=true;try{put(k,v);Object.keys(K).forEach(function(n){if(K[n]===k)state[n]=v})}finally{applying=false}}
+async function upsertUser(su,pw){var us=get(K.users,[]),u=us.find(function(x){return x.id===su.id});if(!u){u={id:su.id};us.push(u)}
+ u.username=su.username;u.displayName=su.displayName;u.systemRole=su.systemRole;u.orgRole=su.orgRole;u.orgEdit=su.orgEdit;u.active=su.active;
+ if(pw){u.passwordHash=await sha256(pw+'::saber::'+su.id);delete u.tempPass;u.mustChange=su.mustChange}
+ put(K.users,us);state.users=us}
+function badge(msg){var b=document.getElementById('syncBadge');if(!tok()){if(b)b.remove();return}
+ if(!b){b=document.createElement('button');b.id='syncBadge';b.type='button';b.onclick=function(){syncNow(true)};document.body.appendChild(b)}
+ var m=gm(),n=Object.keys(m.dirty).length+Object.keys(m.pu).length,s=msg||(authLost?'auth':!navigator.onLine?'off':n?'pend':'ok');
+ b.dataset.s=s;b.textContent={off:'◌ آفلاین'+(n?' · '+n+' تغییر در صف':''),pend:'⟳ '+n+' تغییر در صف',ok:'● همگام‌سازی شد',auth:'⚠ برای همگام‌سازی دوباره وارد شوید',err:'⚠ خطا در ارتباط با سرور'}[s]}
+function schedule(){clearTimeout(timer);timer=setTimeout(function(){syncNow()},2500)}
+window.__sd=function(k){if(applying||SK.indexOf(k)<0)return;try{var bs=jl('saber_sync_base',{});if(bs[k]!==undefined&&eq(real(k,JSON.parse(localStorage.getItem(k))),real(k,bs[k])))return}catch(e){}var m=gm();m.dirty[k]=1;sm(m);badge();schedule()};
+window.__srvUser=function(id){var m=gm();m.pu[id]=1;sm(m);badge();schedule()};
+window.__srvPass=async function(o,n){if(!tok())return 'برای تغییر رمز ابتدا با اینترنت وارد شوید.';if(!navigator.onLine)return 'برای تغییر رمز باید آنلاین باشید.';var r;try{r=await api('POST','/api/password',{old:o,new:n})}catch(e){return 'ارتباط با سرور برقرار نشد؛ دوباره تلاش کنید.'}if(r.ok)return 'ok';if(r.status===403)return 'رمز فعلی در سرور درست نیست.';if(r.status===401)return 'نشست شما منقضی شده؛ دوباره وارد شوید.';return 'خطا در ثبت رمز روی سرور.'};
+async function syncNow(force,quiet){
+ if(busy||!tok()||!navigator.onLine){badge();return}
+ busy=true;badge('pend');
+ try{
+  for(var round=0;round<3;round++){
+   var m=gm(),base=jl('saber_sync_base',{}),conflict=false,changed=false,id,i;
+   for(id in m.pu){var u=get(K.users,[]).find(function(x){return x.id===id});if(!u){delete m.pu[id];continue}
+    var rr=await api('POST','/api/admin/user',{id:id,username:u.username,displayName:u.displayName,orgRole:u.orgRole,orgEdit:u.orgEdit!==false,active:u.active!==false});
+    if(rr.status===401){authLost=true;badge();return}
+    if(rr.ok||rr.status===403||rr.status===409||rr.status===404)delete m.pu[id]}
+   var r=await api('GET','/api/docs');
+   if(r.status===401){authLost=true;badge();return}
+   if(!r.ok)throw new Error('x');authLost=false;
+   var S=r.json.docs||{};
+   if(!m.init)SK.forEach(function(k){var v=real(k,get(k,null));if(Array.isArray(v)?v.length:(v&&typeof v==='object'&&Object.keys(v).length))m.dirty[k]=1});
+   for(i=0;i<SK.length;i++){var k=SK[i],srv=S[k],loc=real(k,get(k,null)),dirty=!!m.dirty[k],pr;
+    if(srv){var sv;try{sv=JSON.parse(srv.value)}catch(e){continue}
+     if(!dirty){if((m.ver[k]||0)!==srv.version){apply(k,sv);base[k]=sv;m.ver[k]=srv.version;changed=true}continue}
+     var mg=merge(loc,sv,base[k]);
+     pr=await api('PUT','/api/docs/'+encodeURIComponent(k),{value:JSON.stringify(mg),baseVersion:srv.version});
+     if(pr.ok){apply(k,mg);base[k]=mg;m.ver[k]=pr.json.version;delete m.dirty[k];changed=true}else if(pr.status===409)conflict=true;
+    }else if(dirty&&loc!=null){
+     pr=await api('PUT','/api/docs/'+encodeURIComponent(k),{value:JSON.stringify(loc),baseVersion:0});
+     if(pr.ok){base[k]=loc;m.ver[k]=pr.json.version;delete m.dirty[k]}else if(pr.status===409)conflict=true}}
+   m.init=true;m.last=Date.now();sm(m);js('saber_sync_base',base);
+   var ur=await api('GET','/api/users');
+   if(ur.ok&&ur.json.users)for(i=0;i<ur.json.users.length;i++){var su=ur.json.users[i];if(!m.pu[su.id])await upsertUser(su)}
+   if(changed&&!quiet){try{renderAll()}catch(e){}try{updateTopUser()}catch(e){}}
+   if(!conflict)break}
+  badge()
+ }catch(e){badge('err')}finally{busy=false}
+}
+window.syncNow=syncNow;
+window.enterSystem=async function(){
+ var ue=document.getElementById('lockUsername'),pe=document.getElementById('lockPassword'),er=document.getElementById('lockError');
+ var un=(ue&&ue.value||'').trim(),pw=pe&&pe.value||'';
+ if(un&&pw&&navigator.onLine){
+  var r=null;try{r=await api('POST','/api/login',{username:un,password:pw})}catch(e){r=null}
+  if(r&&r.status===401){if(er)er.textContent='نام کاربری یا رمز عبور اشتباه است.';return}
+  if(r&&r.status===429){if(er)er.textContent='تلاش‌های ناموفق زیاد بود؛ ۱۵ دقیقه صبر کنید.';return}
+  if(r&&r.ok){try{localStorage.setItem('saber_srv_token',r.json.token)}catch(e){}authLost=false;await upsertUser(r.json.user,pw);try{await syncNow(true,true)}catch(e){}}
+ }
+ return enterSystemLocal();
+};
+window.addEventListener('online',function(){syncNow()});window.addEventListener('offline',function(){badge()});
+document.addEventListener('visibilitychange',function(){if(!document.hidden)syncNow()});
+if(tok())setTimeout(function(){syncNow()},1500);setInterval(function(){syncNow()},60000);setInterval(function(){badge()},5000);
 })();
 
 AddonInit();
