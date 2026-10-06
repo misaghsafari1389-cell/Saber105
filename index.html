@@ -301,8 +301,35 @@ body:not(.m) .sidebar{position:fixed;top:calc(var(--hb) + var(--topbar));bottom:
 body.sbopen:not(.m) .sidebar{transform:none}
 body.m #hdrBanner{--hb:60px;padding:4px 8px;gap:6px}body.m .hb-r,body.m .hb-l .hb-f{display:none}body.m #hdrBanner .hb-c b{font-size:15px}body.m #hdrBanner .hb-c small{display:none}body.m #sbBtn span{display:none}
 .brow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid var(--border)}.brow span{min-width:190px}
+/* ===== UI v5 ===== */
+body,button,input,select,textarea{font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif}
+body:not(.dk) .field input:not([type=checkbox]):not([type=radio]),body:not(.dk) .field select,body:not(.dk) .field textarea,body:not(.dk) .modal input:not([type=checkbox]):not([type=radio]):not([type=file]),body:not(.dk) .modal select,body:not(.dk) .modal textarea,body:not(.dk) .card input:not([type=checkbox]):not([type=radio]):not([type=file]),body:not(.dk) .card select,body:not(.dk) .card textarea{background:#fff!important;color:#1c2622!important;border:1px solid #b9c7c0!important}
+body:not(.dk) .field input:focus,body:not(.dk) .field select:focus,body:not(.dk) .field textarea:focus{border-color:#1f5d42!important;box-shadow:0 0 0 3px rgba(201,162,74,.35)}
+body:not(.dk) .modal,body:not(.dk) .modal-body{color:#1c2622}
+body[data-theme='official'] .card h2,body[data-theme='official'] .card h3,body[data-theme='official'] .cc h3{border-bottom:2px solid #c9a24a;padding-bottom:6px;display:inline-block}
+body[data-theme='official'] .topnav .nav-item.active{border-bottom:3px solid #c9a24a}
+body[data-theme='official'] .side-menu li{display:flex;align-items:center;gap:10px;border-radius:4px}
+body[data-theme='official'] .side-menu li:hover{background:#e6efea;box-shadow:inset -3px 0 0 #c9a24a}
+.side-menu li svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:#1f5d42}
+body[data-theme='official'] tbody tr:nth-child(even){background:#f3f7f5}
+body[data-theme='official'] thead th,body[data-theme='official'] th{position:sticky;top:0;z-index:2}
+body[data-theme='official'] .btn.ghost{border:1px solid #1f5d42;color:#1f5d42;background:transparent}
+.modal{animation:mfade .18s ease-out}@keyframes mfade{from{opacity:0;transform:translateY(8px)}}
+@media(prefers-reduced-motion:reduce){.modal{animation:none}}
+#hdrBanner{transition:height .2s,flex-basis .2s}body.hbs{--hb:46px}
+body.hbs #hdrBanner .hb-c small,body.hbs #hdrBanner .hb-p,body.hbs #hdrBanner .hb-f{display:none}body.hbs .hb-logo{max-height:36px}body.hbs #hdrBanner .hb-c b{font-size:15px}
+#dkBtn{background:transparent;color:#fff;border:1px solid #fff6;border-radius:6px;padding:6px 9px;cursor:pointer}
+.lk-logo{display:block;margin:0 auto 10px;height:120px;max-width:80%;object-fit:contain}
+#cfm{position:fixed;inset:0;background:rgba(8,24,16,.55);z-index:5000;display:flex;align-items:center;justify-content:center;padding:16px}
+#cfm div{background:#fff;color:#1c2622;border-top:4px solid #c9a24a;border-radius:6px;max-width:420px;width:100%;padding:20px;box-shadow:0 12px 40px rgba(0,0,0,.35);animation:mfade .15s}
+#cfm p{margin:0 0 18px;font-size:16px;line-height:1.8}#cfm .r{display:flex;gap:10px;justify-content:flex-start}
+#cfm button{border:0;border-radius:5px;padding:10px 20px;font:700 14px inherit;font-family:inherit;cursor:pointer}#cfm .y{background:#b3261e;color:#fff}#cfm .n{background:#e6efea;color:#1f5d42}
+body.dk{--bg:#0e1511;--surface:#14201a;--card:#182720;--border:#2a3d33;--text:#e6efe9;--muted:#9fb3a8;--primary:#1d3328;color:#e6efe9}
+body.dk[data-theme] .card,body.dk[data-theme] .cc,body.dk[data-theme] .sidebar,body.dk[data-theme] .modal,body.dk[data-theme] #crumb{background:var(--card)!important;color:var(--text)}
+body.dk[data-theme] tbody tr:nth-child(even){background:#1b2d24}body.dk[data-theme] th{background:#1d3328!important;color:#e6c97a!important}
+body.dk[data-theme] h1,body.dk[data-theme] h2,body.dk[data-theme] h3,body.dk[data-theme] a{color:#e6c97a}
 </style>
-</head>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap"></head>
 <body data-project="سامانه صابر بسیج" data-project-status="closed-final">
 
 <div id="deviceSelectOverlay" class="hidden">
@@ -1827,6 +1854,31 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('SW failed:', err));
   });
 }
+</script>
+<script>
+/* UI v5 */
+(function(){
+var ic={members:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 11a3 3 0 100-6M21 20c0-2.5-1.5-4.6-3.5-5.5"/>',attendance:'<path d="M4 12l5 5L20 6"/>',meetings:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',reports:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7"/>',courses:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>',letters:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',archive:'<path d="M3 7h18v13H3zM3 7l2-4h14l2 4"/><path d="M10 12h4"/>',settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',dashboard:'<path d="M3 11l9-8 9 8v9H3z"/>'};
+function icons(){document.querySelectorAll('.side-menu li').forEach(function(li){if(li.dataset.ic||li.children.length)return;li.dataset.ic=1;var t=li.textContent.replace(/^[^\u0600-\u06FFA-Za-z0-9]+/,'').trim(),k=li.dataset.tab,p=ic[k]||'<circle cx="12" cy="12" r="4"/>';li.innerHTML='<svg viewBox="0 0 24 24">'+p+'</svg><span>'+t+'</span>'})}
+/* in-site confirm */
+var last=null;document.addEventListener('click',function(e){last=e.target.closest('button,[onclick],li,a,input,label')||e.target},true);
+var nativeAlert=window.alert;window.__cok=false;
+window.confirm=function(msg){if(window.__cok){window.__cok=false;return true}
+var el=last||document.activeElement,o=document.createElement('div');o.id='cfm';o.setAttribute('role','alertdialog');o.innerHTML='<div><p></p><div class="r"><button class="y" type="button">بله، انجام شود</button><button class="n" type="button">انصراف</button></div></div>';o.querySelector('p').textContent=msg;document.body.appendChild(o);
+var cl=function(){o.remove();document.removeEventListener('keydown',kd,true)},kd=function(e){if(e.key==='Escape')cl()};document.addEventListener('keydown',kd,true);
+o.querySelector('.n').onclick=cl;o.addEventListener('click',function(e){if(e.target===o)cl()});
+o.querySelector('.y').onclick=function(){cl();window.__cok=true;try{el.click()}catch(x){}setTimeout(function(){window.__cok=false},80)};o.querySelector('.n').focus();return false};
+/* dark mode */
+function dk(f){document.body.classList.toggle('dk',f);try{localStorage.setItem('saber_dk','1'===f+''?'1':f?'1':'0')}catch(e){}}
+try{if(localStorage.getItem('saber_dk')==='1')document.body.classList.add('dk')}catch(e){}
+document.addEventListener('click',function(e){if(e.target.closest('#dkBtn'))dk(!document.body.classList.contains('dk'))});
+/* shrink header on scroll */
+document.addEventListener('scroll',function(e){var t=e.target,s=t===document?scrollY:t.scrollTop;if(t!==document&&t.scrollHeight<t.clientHeight+250)return;var b=document.body;if(s>70)b.classList.add('hbs');else if(s<15)b.classList.remove('hbs')},true);
+/* login logo + periodic hooks */
+function tick(){icons();var l=document.querySelector('.hb-l');if(l&&!document.getElementById('dkBtn')){var b=document.createElement('button');b.id='dkBtn';b.type='button';b.title='حالت تاریک';b.setAttribute('aria-label','حالت تاریک');b.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/></svg>';l.appendChild(b)}
+var u=document.getElementById('lockUsername');if(u&&!document.querySelector('.lk-logo')){var f=u.closest('form'),i=new Image();i.className='lk-logo';var o={};try{o=JSON.parse(localStorage.getItem('saber_brand_v1')||'{}')}catch(e){}i.src=o.logo||'logo.png';f.parentNode.insertBefore(i,f)}}
+setInterval(tick,800);tick()
+})();
 </script>
 </body>
 </html>
