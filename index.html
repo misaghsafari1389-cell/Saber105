@@ -1340,6 +1340,15 @@ function approveMemberRequest(id){
   let reqs = get(K.memberRequests, []) || [];
   const req = reqs.find(r=>r.id===id);
   if(!req || req.status!=='pending') return;
+  if(req.type==='حذف عضو'){ if(!confirm('حذف «'+req.name+'» از کل سامانه تأیید شود؟')) return; adPurge(req.targetMemberId); req.status='approved'; req.approvedAt=Date.now(); req.approvedBy=currentUser()?currentUser().displayName:''; put(K.memberRequests, reqs); state.memberRequests=reqs; audit('hr.approve_delete','تأیید حذف عضو: '+req.name, id); toast('عضو از کل سامانه حذف شد'); renderAll(); renderHRCenter(); return; }
+  if(req.type==='حذف عضو'){
+    if(!confirm('حذف «'+req.name+'» تأیید شود؟ این عضو از کل سامانه و همه‌ی دستگاه‌ها حذف می‌شود.')) return;
+    deleteMemberEverywhere(req.targetMemberId);
+    req.status='approved'; req.approvedAt=Date.now(); req.approvedBy=currentUser()?currentUser().displayName:'';
+    put(K.memberRequests, reqs); state.memberRequests=reqs;
+    audit('hr.approve','تأیید حذف عضو: '+req.name, id);
+    toast('عضو از کل سامانه حذف شد'); renderAll(); renderHRCenter(); return;
+  }
   if(!confirm((req.nationalId?'':'⚠️ هشدار: کد ملی این درخواست خالی است.\n\n')+'درخواست «'+req.name+'» تأیید و به فهرست اعضا اضافه شود؟')) return;
   if(!req.nationalId) audit('hr.warn','تأیید عضو بدون کد ملی: '+req.name, id);
   // create member
@@ -1406,12 +1415,8 @@ function deleteMemberGuarded(id){
   // high privilege – still confirm + audit
   const m = members().find(x=>x.id===id);
   if(!m) return;
-  if(!confirm('پرونده «'+m.name+'» حذف شود؟ این عمل در لاگ ثبت می‌شود.')) return;
-  state.members = members().filter(x=>x.id!==id);
-  state.attendance.forEach(a=>{ if(a.statuses) delete a.statuses[id]; });
-  state.meetings.forEach(x=>{ x.participants=(x.participants||[]).filter(i=>i!==id); });
-  delete state.evaluations[id];
-  saveAll();
+  if(!confirm('پرونده «'+m.name+'» از کل سامانه و همه‌ی دستگاه‌ها حذف شود؟ این عمل برگشت‌پذیر نیست و در لاگ ثبت می‌شود.')) return;
+  deleteMemberEverywhere(id);
   closeModal();
   renderAll();
   audit('member.delete', 'حذف مستقیم عضو: '+(m?m.name:id), id);
@@ -1821,6 +1826,33 @@ state.auditLog=get(K.auditLog,[]);
 state.users=get(K.users,[]);
 checkAuthOnLoad();
 
+/* ===== UNIFIED DELETE v8 ===== */
+var TOMB='saber_tombstones';
+function deleteMemberEverywhere(id,keepTomb){
+ var m=(state.members||[]).find(function(x){return x.id===id}),nm=m?m.name:'';
+ state.members=(state.members||[]).filter(function(x){return x.id!==id});put(K.members,state.members);
+ (state.attendance||[]).forEach(function(a){if(a&&a.statuses)delete a.statuses[id]});put(K.attendance,state.attendance);
+ (state.meetings||[]).forEach(function(x){x.participants=(x.participants||[]).filter(function(i){return i!==id})});put(K.meetings,state.meetings);
+ (state.minutes||[]).forEach(function(x){if(Array.isArray(x.attendees))x.attendees=x.attendees.filter(function(i){return i!==id})});put(K.minutes,state.minutes);
+ if(state.evaluations&&state.evaluations[id]!==undefined){delete state.evaluations[id];put(K.evaluations,state.evaluations)}
+ state.courses=(state.courses||[]).filter(function(c){return c.memberId!==id});put(K.courses,state.courses);
+ var tk=(get('saber_tasks',[])||[]).filter(function(t){return t&&t.who!==id});put('saber_tasks',tk);var rq=(get(K.memberRequests,[])||[]).filter(function(r){return !(r.targetMemberId===id&&r.status==='pending')});put(K.memberRequests,rq);state.memberRequests=rq;
+ if(nm){var N=adOrg(),hit=N.filter(function(n){return !n.locked&&!n.userId&&n.id!=='o-cmd'&&n.name===nm});if(hit.length){hit.forEach(function(h){N.forEach(function(x){if(x.parent===h.id)x.parent=h.parent||''})});N=N.filter(function(n){return hit.indexOf(n)<0});put(K_ORG,N)}}
+ if(!keepTomb){var T=get(TOMB,[])||[];if(!T.some(function(t){return t.id===id}))T.push({id:id,name:nm,ts:Date.now()});put(TOMB,T)}
+}
+function sweepTomb(ids){var ch=false;
+ (state.attendance||[]).forEach(function(a){if(a&&a.statuses)ids.forEach(function(id){if(id in a.statuses){delete a.statuses[id];ch=true}})});
+ (state.meetings||[]).forEach(function(x){if(Array.isArray(x.participants)){var n=x.participants.filter(function(i){return ids.indexOf(i)<0});if(n.length!==x.participants.length){x.participants=n;ch=true}}});
+ (state.minutes||[]).forEach(function(x){if(Array.isArray(x.attendees)){var n=x.attendees.filter(function(i){return ids.indexOf(i)<0});if(n.length!==x.attendees.length){x.attendees=n;ch=true}}});
+ var c=(state.courses||[]).filter(function(x){return ids.indexOf(x.memberId)<0});if(c.length!==(state.courses||[]).length){state.courses=c;ch=true}
+ if(state.evaluations)ids.forEach(function(id){if(id in state.evaluations){delete state.evaluations[id];ch=true}});
+ if(ch)saveAll();
+ var T0=get('saber_tasks',[])||[],T1=T0.filter(function(t){return t&&ids.indexOf(t.who)<0});if(T1.length!==T0.length){put('saber_tasks',T1);ch=true}
+ return ch}
+function applyTombstones(){var T=get(TOMB,[])||[];if(!T.length)return;var ids=T.map(function(t){return t.id}),ch=false;ids.forEach(function(id){if((state.members||[]).some(function(m){return m.id===id})){deleteMemberEverywhere(id,true);ch=true}});if(sweepTomb(ids))ch=true;if(ch){try{renderAll()}catch(e){}}}
+setInterval(function(){try{if(get(K.authSession,null))applyTombstones()}catch(e){}},3000);
+window.deleteMemberEverywhere=deleteMemberEverywhere;
+
 /* ===== BRAND + SIDEBAR v4 ===== */
 (function(){
 var BK='saber_brand_v1',SL=[['wall','تصویر زمینه (والپیپر) بالای سایت',0],['logo','لوگوی سایت',1],['p1','تصویر رهبری ۱',1],['p2','تصویر رهبری ۲',1],['p3','تصویر رهبری ۳',1],['flag','پرچم',1],['arm','آرم',1]];
@@ -1848,7 +1880,7 @@ if(document.readyState!=='loading')init();else document.addEventListener('DOMCon
 /* ===== CLOUD SYNC v6 ===== */
 (function(){
 var API;try{API=localStorage.getItem('saber_api')||'https://saber-api.misaghsafari105.workers.dev'}catch(e){API='https://saber-api.misaghsafari105.workers.dev'}
-var SK=['basij_members','saber_attendance','saber_programs','saber_meetings','saber_minutes','saber_reports','saber_courses','saber_evaluations','saber_letters','saber_member_requests','saber_org_structure','saber_org_v2','saber_tasks','saber_events'];
+var SK=['basij_members','saber_attendance','saber_programs','saber_meetings','saber_minutes','saber_reports','saber_courses','saber_evaluations','saber_letters','saber_member_requests','saber_org_structure','saber_org_v2','saber_tasks','saber_events','saber_tombstones'];
 var SEED={basij_members:['علی رضایی','محمد علوی','رضا کریمی','سینا احمدی','امیرحسین مرادی'],saber_programs:['اردوی فرهنگی و آموزشی','مسابقه ورزشی پایگاه'],saber_meetings:['جلسه هفتگی پایگاه','جلسه برنامه‌ریزی فرهنگی'],saber_reports:['اجرای برنامه فرهنگی','گزارش جلسه هفتگی','گزارش فعالیت آموزشی']};
 function real(k,v){if(!Array.isArray(v)||!SEED[k])return v;return v.filter(function(r){return !(r&&SEED[k].indexOf(r.name||r.title)>=0)})}
 var applying=false,busy=false,timer=null,authLost=false;
@@ -1932,6 +1964,33 @@ document.addEventListener('visibilitychange',function(){if(!document.hidden)sync
 if(tok())setTimeout(function(){syncNow()},1500);setInterval(function(){syncNow()},60000);setInterval(function(){badge()},5000);
 })();
 
+/* ===== UNIFIED MEMBER DELETE v8 ===== */
+(function(){
+function adPurge(id){
+ var m=members().find(function(x){return x.id===id}),nm=m?String(m.name||'').trim():'';
+ state.members=members().filter(function(x){return x.id!==id});
+ (state.attendance||[]).forEach(function(a){if(a.statuses)delete a.statuses[id]});
+ (state.meetings||[]).forEach(function(x){x.participants=(x.participants||[]).filter(function(i){return i!==id})});
+ (state.minutes||[]).forEach(function(x){if(Array.isArray(x.attendees))x.attendees=x.attendees.filter(function(i){return i!==id})});
+ state.courses=(state.courses||[]).filter(function(c){return c.memberId!==id});
+ if(state.evaluations)delete state.evaluations[id];
+ var tk=(get('saber_tasks',[])||[]).filter(function(t){return t&&t.who!==id});put('saber_tasks',tk);var TB=get('saber_tombstones',[])||[];if(!TB.some(function(x){return x.id===id})){TB.push({id:id,name:nm,ts:Date.now()});put('saber_tombstones',TB)}
+var rq=get(K.memberRequests,[])||[];rq.forEach(function(r){if(r.status==='pending'&&r.targetMemberId===id){r.status='approved';r.approvedAt=Date.now()}});put(K.memberRequests,rq);state.memberRequests=rq;
+ var N=adOrg(),dead=N.filter(function(n){return !n.locked&&!n.userId&&(n.memberId===id||(nm&&String(n.name||'').trim()===nm))});
+ if(dead.length){var ids=dead.map(function(d){return d.id});N.forEach(function(x){var p=x.parent,g=0;while(ids.indexOf(p)>=0&&g++<30){p=(N.find(function(y){return y.id===p})||{}).parent}x.parent=p});put(K_ORG,N.filter(function(x){return ids.indexOf(x.id)<0}))}
+ saveAll();return nm}
+window.adPurge=adPurge;
+window.deleteMember=function(id){
+ var m=members().find(function(x){return x.id===id});if(!m)return;
+ if(!adCanMem()){
+  if(!confirm('شما مجوز حذف مستقیم ندارید. درخواست حذف «'+m.name+'» برای تأیید ثبت شود؟'))return;
+  var rq=get(K.memberRequests,[])||[];var u=currentUser();
+  rq.unshift({id:uid(),type:'حذف عضو',name:m.name,targetMemberId:id,status:'pending',requestedBy:u?u.displayName:'',requestedById:u?u.id:null,date:today()});
+  put(K.memberRequests,rq);state.memberRequests=rq;audit('hr.request_delete','درخواست حذف عضو: '+m.name,id);closeModal();toast('درخواست حذف ثبت شد و پس از تأیید در کل سامانه اعمال می‌شود');return}
+ if(!confirm('پرونده «'+m.name+'» از کل سامانه حذف شود؟ (اعضا، حضور و غیاب، جلسات، دوره‌ها، ارزیابی و ساختار) این کار روی همه‌ی دستگاه‌ها اعمال می‌شود.'))return;
+ adPurge(id);audit('member.delete','حذف عضو از کل سامانه: '+m.name,id);closeModal();renderAll();toast('عضو از کل سامانه حذف شد')};
+})();
+
 AddonInit();
 })();
 
@@ -2002,6 +2061,51 @@ if(!('Notification' in window)){note('این مرورگر از اعلان پشت
 Notification.requestPermission().then(function(p){if(p==='granted'){localStorage.setItem(EN,'1');paint();show('اعلان‌ها فعال شد','از این پس رویدادهای مهم اینجا نمایش داده می‌شود','test')}else note('اجازه داده نشد؛ از تنظیمات مرورگر فعالش کنید')})});
 setInterval(function(){bell();check()},2000);
 setInterval(function(){if(!document.hidden&&navigator.onLine&&localStorage.getItem('saber_srv_token')&&window.syncNow)window.syncNow()},30000);
+})();
+</script>
+<script>
+/* DBTEST v9 */
+(function(){
+var DEFAPI='https://saber-api.misaghsafari105.workers.dev';
+function api0(){try{return localStorage.getItem('saber_api')||DEFAPI}catch(e){return DEFAPI}}
+function tok(){try{return localStorage.getItem('saber_srv_token')||''}catch(e){return ''}}
+function meta(){try{return JSON.parse(localStorage.getItem('saber_sync_meta')||'{}')}catch(e){return {}}}
+function fa(n){try{return Number(n).toLocaleString('fa-IR')}catch(e){return n}}
+function fmt(ts){if(!ts)return 'هنوز انجام نشده';try{return new Date(ts).toLocaleString('fa-IR')}catch(e){return '—'}}
+async function call(m,p,b){var t0=performance.now(),c=new AbortController(),to=setTimeout(function(){c.abort()},12000);
+try{var h={'content-type':'application/json'};if(tok())h.authorization='Bearer '+tok();var r=await fetch(api0()+p,{method:m,headers:h,body:b?JSON.stringify(b):undefined,signal:c.signal}),j=null;try{j=await r.json()}catch(e){}return{ok:r.ok,status:r.status,json:j,ms:Math.round(performance.now()-t0)}}
+catch(e){return{ok:false,status:0,json:null,ms:Math.round(performance.now()-t0)}}finally{clearTimeout(to)}}
+function rows(){var m=meta(),n=Object.keys(m.dirty||{}).length+Object.keys(m.pu||{}).length;
+return[['اتصال اینترنت',navigator.onLine?'آنلاین ✓':'آفلاین'],['ورود به سرور',tok()?'برقرار ✓':'برقرار نیست؛ یک بار آنلاین وارد شوید'],['آخرین همگام‌سازی',fmt(m.last)],['تغییرات در صف ارسال',fa(n)+' مورد'],['آدرس سرور',api0()]]}
+function paint(){var s=document.getElementById('dbSt');if(!s)return;s.innerHTML=rows().map(function(r){return'<div class="dbr"><span>'+r[0]+'</span><b dir="auto">'+r[1]+'</b></div>'}).join('')}
+function out(list,sum,ok){var o=document.getElementById('dbOut');o.innerHTML=list.map(function(x){return'<div class="dbl '+(x[0]?'ok':'bad')+'">'+(x[0]?'✓ ':'✗ ')+x[1]+'</div>'}).join('')+(sum?'<div class="dbs '+(ok?'ok':'bad')+'">'+sum+'</div>':'')}
+async function test(){var L=[],o=document.getElementById('dbOut');o.textContent='در حال تست…';
+var a=await call('GET','/api/health');
+if(!(a.ok&&a.json&&a.json.db)){L.push([0,a.status?'سرور پاسخ داد ولی دیتابیس وصل نیست (کد '+a.status+')':'به سرور نرسید؛ اینترنت یا آدرس سرور را بررسی کنید']);return out(L,'تست ناموفق',0)}
+L.push([1,'سرور و دیتابیس پاسخ می‌دهند · '+fa(a.ms)+' میلی‌ثانیه']);
+if(!tok()){L.push([0,'نشست ورود ندارید؛ خارج شوید و با اینترنت دوباره وارد شوید']);return out(L,'اتصال سالم است ولی ورود لازم است',0)}
+var u=await call('GET','/api/users');
+if(u.status===401){L.push([0,'نشست منقضی شده؛ دوباره وارد شوید']);return out(L,'تست ناموفق',0)}
+if(!u.ok){L.push([0,'خواندن کاربران ناموفق بود']);return out(L,'تست ناموفق',0)}
+L.push([1,'نشست معتبر است · '+fa((u.json.users||[]).length)+' کاربر روی سرور']);
+var d=await call('GET','/api/docs');if(!d.ok){L.push([0,'خواندن داده‌ها ناموفق بود']);return out(L,'تست ناموفق',0)}
+var docs=d.json.docs||{};L.push([1,'خواندن داده‌ها موفق · '+fa(Object.keys(docs).length)+' مجموعه روی سرور']);
+var bv=docs.saber_ping?docs.saber_ping.version:0,val=String(Date.now()),w=await call('PUT','/api/docs/saber_ping',{value:val,baseVersion:bv});
+if(!w.ok){L.push([0,'نوشتن روی دیتابیس ناموفق بود (کد '+w.status+')']);return out(L,'تست ناموفق',0)}
+var d2=await call('GET','/api/docs'),back=d2.ok&&d2.json.docs&&d2.json.docs.saber_ping&&d2.json.docs.saber_ping.value===val;
+L.push([back?1:0,back?'نوشتن و خواندن دوباره موفق · '+fa(w.ms)+' میلی‌ثانیه':'مقدار نوشته‌شده درست برنگشت']);
+out(L,back?'همه‌چیز سالم است':'تست ناموفق',back)}
+function build(){var s=document.getElementById('adSet');if(!s||document.getElementById('adDb'))return;
+var st=document.createElement('style');st.textContent='.dbr{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;flex-wrap:wrap}.dbl{padding:6px 0;font-size:13px}.dbl.ok,.dbs.ok{color:#2e7d32}.dbl.bad,.dbs.bad{color:#c62828}.dbs{margin-top:8px;font-weight:700}#adDb .dbb{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}';document.head.appendChild(st);
+var d=document.createElement('div');d.id='adDb';d.className='card';s.parentNode.insertBefore(d,s);
+d.innerHTML='<h3>همگام‌سازی و تست دیتابیس</h3><div id="dbSt"></div><div class="dbb"><button class="btn" id="dbSync" type="button">همگام‌سازی همین الان</button><button class="btn ghost" id="dbTest" type="button">تست اتصال به دیتابیس</button></div><div id="dbOut"></div><details style="margin-top:10px"><summary style="cursor:pointer;font-size:13px">تغییر آدرس سرور (پیشرفته)</summary><div class="dbb"><input id="dbUrl" dir="ltr" style="flex:1;min-width:220px" value="'+api0()+'"><button class="btn ghost" id="dbSave" type="button">ذخیره و بارگذاری دوباره</button></div></details>';
+d.addEventListener('click',async function(e){var id=e.target.id;
+if(id==='dbTest'){e.target.disabled=true;try{await test()}finally{e.target.disabled=false}}
+else if(id==='dbSync'){var o=document.getElementById('dbOut');if(!tok()){o.innerHTML='<div class="dbl bad">✗ ابتدا با اینترنت وارد شوید</div>';return}if(!navigator.onLine){o.innerHTML='<div class="dbl bad">✗ اینترنت وصل نیست</div>';return}
+e.target.disabled=true;o.textContent='در حال همگام‌سازی…';try{await window.syncNow(true);var m=meta(),n=Object.keys(m.dirty||{}).length;o.innerHTML=n?'<div class="dbl bad">✗ '+fa(n)+' تغییر هنوز در صف است؛ دوباره امتحان کنید</div>':'<div class="dbs ok">همگام‌سازی کامل شد</div>'}catch(x){o.innerHTML='<div class="dbl bad">✗ همگام‌سازی ناموفق بود</div>'}finally{e.target.disabled=false;paint()}}
+else if(id==='dbSave'){var v=document.getElementById('dbUrl').value.trim().replace(/\/+$/,'');if(!/^https:\/\/[^\s]+$/.test(v)){alert('آدرس باید با https:// شروع شود');return}try{localStorage.setItem('saber_api',v)}catch(x){}location.reload()}});
+paint()}
+setInterval(function(){build();paint()},2000);
 })();
 </script>
 </body>
