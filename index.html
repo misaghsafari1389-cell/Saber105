@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
+<head><script>/* AUTOLOGOUT v10 */try{if(!sessionStorage.getItem('saber_alive')){['saber_auth_session','saber_current_session','saber_current'].forEach(function(k){localStorage.removeItem(k)})}sessionStorage.setItem('saber_alive','1')}catch(e){}</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1f5d42">
@@ -2106,6 +2107,18 @@ e.target.disabled=true;o.textContent='در حال همگام‌سازی…';try{
 else if(id==='dbSave'){var v=document.getElementById('dbUrl').value.trim().replace(/\/+$/,'');if(!/^https:\/\/[^\s]+$/.test(v)){alert('آدرس باید با https:// شروع شود');return}try{localStorage.setItem('saber_api',v)}catch(x){}location.reload()}});
 paint()}
 setInterval(function(){build();paint()},2000);
+})();
+</script>
+<script>
+/* AUTOLOGOUT v10 (idle) */
+(function(){var IDLE=10*60*1000,hid=0;
+function out(){['saber_auth_session','saber_current_session','saber_current'].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});location.reload()}
+document.addEventListener('visibilitychange',function(){
+if(document.hidden){hid=Date.now();try{localStorage.setItem('saber_hid',String(hid))}catch(e){}return}
+var t=Number((function(){try{return localStorage.getItem('saber_hid')}catch(e){return 0}})()||hid||0);
+if(!t||Date.now()-t<IDLE||!localStorage.getItem('saber_auth_session'))return;
+var done=false,go=function(){if(!done){done=true;out()}};setTimeout(go,3000);
+try{if(navigator.onLine&&localStorage.getItem('saber_srv_token')&&window.syncNow){Promise.resolve(window.syncNow(true)).then(go,go)}else go()}catch(e){go()}})
 })();
 </script>
 </body>
